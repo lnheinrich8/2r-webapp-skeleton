@@ -1,0 +1,9 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+
+    font-family: 'Roboto', sans-serif;
+    color: black;
+    background-color: rgb(26, 26, 26);
+}
