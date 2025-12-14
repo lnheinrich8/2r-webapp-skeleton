@@ -1,0 +1,17 @@
+# Front-end
+
+node_modules
+
+# Back-end
+
+target/
+*.rs.bk
+*.dll
+*.so
+*.dylib
+
+# General
+
+.env
+.vscode/*
+!.vscode/extensions.json
