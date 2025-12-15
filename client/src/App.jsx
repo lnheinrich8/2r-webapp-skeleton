@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import Test from './components/Test';
+import Test from './features/dashboard/components/Test';
 
 import './general.css';
 
