@@ -9,6 +9,7 @@ use axum::Router;
 use tower_http::cors::CorsLayer;
 
 use crate::api::v1::user_api;
+use crate::api::v1::auth_api;
 
 #[tokio::main]
 async fn main() {
@@ -20,6 +21,7 @@ async fn main() {
 
     let app = Router::new()
         .nest("/user", user_api::router())
+        .nest("/auth", auth_api::router())
         .layer(cors);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 5000));
