@@ -8,7 +8,7 @@ const Test = () => {
     const [testData, setTestData] = useState(null);
 
     const handleTestButton = async () => {
-        let id = 2;
+        let id = 1;
         try {
             const res = await axios.get(`${API_BASE_URL}/user/getbyid/${id}`);
             setTestData(res.data);

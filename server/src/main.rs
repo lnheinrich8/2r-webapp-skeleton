@@ -1,6 +1,7 @@
 mod api;
 mod schemas;
 mod services;
+mod db;
 
 use std::net::SocketAddr;
 
