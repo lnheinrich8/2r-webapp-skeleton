@@ -16,3 +16,18 @@ pub fn get_by_id(pool: &PgPool, id: i64) -> UserResponse {
         updated_at: user.updated_at,
     }
 }
+
+pub fn get_by_email(pool: &PgPool, email: &str) -> UserResponse {
+    let mut conn = pool.get().expect("Failed to get DB connection from pool");
+    let user = user_repo::get_by_email(&mut conn, email).expect("User not found");
+
+    UserResponse {
+        id: user.id,
+        email: user.email,
+        password: user.password,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+    }
+}

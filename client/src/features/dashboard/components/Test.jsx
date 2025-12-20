@@ -8,9 +8,9 @@ const Test = () => {
     const [testData, setTestData] = useState(null);
 
     const handleTestButton = async () => {
-        let id = 1;
+        let email = "lnheinrich8@gmail.com";
         try {
-            const res = await axios.get(`${API_BASE_URL}/user/getbyid/${id}`);
+            const res = await axios.get(`${API_BASE_URL}/user/getbyemail/${email}`);
             setTestData(res.data);
             console.log(res.data);
         } catch(error) {
