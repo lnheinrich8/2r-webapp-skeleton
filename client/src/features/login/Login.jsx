@@ -37,7 +37,7 @@ const Login = () => {
                 // { withCredentials: true }
             );
 
-            setUser(res.data.user);
+            // setUser(res.data.user);
             navigate('/dashboard');
             checkAuth();
         } catch (err) {

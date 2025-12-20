@@ -5,7 +5,7 @@ mod db;
 
 use std::{env, net::SocketAddr};
 
-use axum::http::{HeaderValue, Method};
+use axum::http::{header::CONTENT_TYPE, HeaderValue, Method};
 use axum::Router;
 use dotenvy::dotenv;
 use tower_http::cors::CorsLayer;
@@ -25,11 +25,14 @@ async fn main() {
     let pool = init_pool(&database_url);
     let state = AppState { db_pool: pool };
 
-    let cors = CorsLayer::new().allow_methods([Method::GET]).allow_origin(
-        "http://localhost:5173"
-            .parse::<HeaderValue>()
-            .expect("Invalid CORS origin"),
-    );
+    let cors = CorsLayer::new()
+        .allow_methods([Method::GET, Method::POST])
+        .allow_headers([CONTENT_TYPE])
+        .allow_origin(
+            "http://localhost:5173"
+                .parse::<HeaderValue>()
+                .expect("Invalid CORS origin"),
+        );
 
     let app = Router::<AppState>::new()
         .nest("/user", user_api::router())

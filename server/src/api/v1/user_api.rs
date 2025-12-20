@@ -8,6 +8,7 @@ use axum::{
 use crate::AppState;
 
 use crate::schemas::user_schema::UserResponse;
+
 use crate::services::user_service;
 
 pub fn router() -> Router<AppState> {
