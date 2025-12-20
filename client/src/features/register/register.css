@@ -1,0 +1,85 @@
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+
+    background-color: rgb(230, 230, 230); /* Dis a big one */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.register-form h2 {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.label {
+    color: black;
+    padding-right: 20px;
+}
+
+.autocomplete-wrapper {
+    position: relative;
+}
+.suggestion-list {
+    top: 50px;
+    position: absolute;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 999;
+    width: 100%;
+    margin-top: 2px;
+    padding: 0;
+    list-style: none;
+}
+.suggestion-list li {
+    padding: 8px;
+    cursor: pointer;
+}
+.suggestion-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.login-text {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.login-link {
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+
+    color: rgb(27, 155, 106);
+}
+
+.login-link:hover {
+    color: rgb(20, 116, 79);
+}
+
+.error {
+    color: #d9534f;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
