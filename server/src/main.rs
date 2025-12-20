@@ -1,7 +1,9 @@
 mod api;
+mod core;
+mod db;
 mod schemas;
 mod services;
-mod db;
+mod utils;
 
 use std::{env, net::SocketAddr};
 
