@@ -20,7 +20,7 @@ const Register = () => {
 
     const [error, setError] = useState('');
 
-    const [publicKey, setPublicKey] = useState(null);
+    // const [publicKey, setPublicKey] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -35,17 +35,16 @@ const Register = () => {
         }
 
         try {
-            const key = publicKey || await loadPublicKeyFromPemUrl('/keys/public_key.pem');
-            setPublicKey(key);
-
+            // const key = publicKey || await loadPublicKeyFromPemUrl('/keys/public_key.pem');
+            // setPublicKey(key);
             const { confirmPassword, ...formDataToSend } = formData; // exclude confirmPassword
-            const encryptedPayload = await hybridEncrypt(key, {
-                ...formDataToSend
-            });
+            // const encryptedPayload = await hybridEncrypt(key, {
+            //     ...formDataToSend
+            // });
             
             await axios.post(
                 `${API_BASE_URL}/auth/register`,
-                { ...encryptedPayload }
+                { ...formDataToSend }
             );
             navigate('/', { state: { registrationSuccess: true } });
         } catch (err) {

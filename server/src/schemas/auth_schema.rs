@@ -8,4 +8,12 @@ pub struct LoginRequest {
     pub password: String,
 }
 
+#[derive(Deserialize)]
+pub struct RegisterRequest {
+    pub firstname: String,
+    pub lastname: String,
+    pub email: String,
+    pub password: String,
+}
+
 // RESPONSE SCHEMAS
