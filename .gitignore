@@ -9,6 +9,7 @@ target/
 *.dll
 *.so
 *.dylib
+rustfmt.toml
 
 # General
 
