@@ -11,6 +11,7 @@ pub enum AuthError {
     Conflict,
     Database,
     Pool,
+    Hash,
 }
 
 #[derive(Serialize)]
@@ -23,6 +24,7 @@ impl IntoResponse for AuthError {
         let (status, message) = match self {
             AuthError::Unauthorized => (StatusCode::UNAUTHORIZED, "Invalid credentials"),
             AuthError::Conflict => (StatusCode::CONFLICT, "User already exists"),
+            AuthError::Hash => (StatusCode::INTERNAL_SERVER_ERROR, "Password processing failed"),
             AuthError::Database | AuthError::Pool => {
                 (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error")
             }
