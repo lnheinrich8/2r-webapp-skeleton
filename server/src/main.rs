@@ -39,8 +39,8 @@ async fn main() {
         .allow_credentials(true)
         .allow_origin("http://localhost:5173".parse::<HeaderValue>().expect("Invalid CORS origin"));
 
-    // Routers
-    let user_protected = user_api::router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
+    // Routers (protected and public)
+    let user_protected = user_api::protected_router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
     let auth_public = auth_api::public_router();
     let auth_protected = auth_api::protected_router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
 

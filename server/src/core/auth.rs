@@ -21,8 +21,7 @@ pub struct Claims {
 
 pub async fn verify_session(State(state): State<AppState>, mut request: Request<Body>, next: Next) -> Result<Response, AuthError> {
     let token = extract_token(request.headers()).ok_or(AuthError::Unauthorized)?; // throw unauthorized exception if no token exists
-    let token_data = decode::<Claims>(&token, &DecodingKey::from_secret(state.jwt_secret.as_bytes()), &Validation::default())
-        .map_err(|_| AuthError::Unauthorized)?;
+    let token_data = decode::<Claims>(&token, &DecodingKey::from_secret(state.jwt_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Unauthorized)?;
 
     // Check if user exists
     let mut conn = state.db_pool.get().map_err(|_| AuthError::Pool)?;

@@ -7,10 +7,10 @@ use axum::{
 
 use crate::AppState;
 use crate::core::exceptions::user_exceptions::UserError;
-use crate::schemas::user_schema::UserResponse;
 use crate::services::user_service;
+use crate::schemas::user_schema::UserResponse;
 
-pub fn router() -> Router<AppState> {
+pub fn protected_router() -> Router<AppState> {
     Router::<AppState>::new()
         .route("/getbyid/:id", get(get_user_by_id))
         .route("/getbyemail/:email", get(get_user_by_email))

@@ -3,6 +3,7 @@ use diesel::prelude::*;
 
 use crate::db::schema::users;
 
+// Reading
 #[derive(Debug, Clone, Queryable, Identifiable, Selectable)]
 #[diesel(table_name = users)]
 pub struct User {
@@ -15,6 +16,7 @@ pub struct User {
     pub updated_at: DateTime<Utc>,
 }
 
+// Creating
 #[derive(Debug, Clone, Insertable)]
 #[diesel(table_name = users)]
 pub struct NewUser<'a> {
@@ -24,6 +26,7 @@ pub struct NewUser<'a> {
     pub lastname: &'a str,
 }
 
+// Updating
 #[derive(AsChangeset)]
 #[diesel(table_name = users)]
 pub struct UpdateUser<'a> {
