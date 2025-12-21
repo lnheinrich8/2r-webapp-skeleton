@@ -7,7 +7,9 @@ use crate::schemas::user_schema::UserResponse;
 use crate::services::auth_service;
 
 pub fn router() -> Router<AppState> {
-    Router::<AppState>::new().route("/login", post(login)).route("/register", post(register))
+    Router::<AppState>::new()
+        .route("/login", post(login))
+        .route("/register", post(register))
 }
 
 pub async fn login(State(state): State<AppState>, Json(payload): Json<LoginRequest>) -> Result<Json<UserResponse>, AuthError> {

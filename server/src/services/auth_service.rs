@@ -1,5 +1,4 @@
 use diesel::result::Error;
-
 use bcrypt::{hash, verify, DEFAULT_COST};
 
 use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
