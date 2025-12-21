@@ -9,6 +9,7 @@ use axum::{
     response::{IntoResponse, Response},
 };
 
+use crate::core::auth::Claims;
 use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
 use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
@@ -37,15 +38,16 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
         .ok_or(AuthError::Token)?
         .timestamp() as usize;
 
-    let claims = serde_json::json!({
-        "sub": user_response.id,
-        "email": user_response.email.clone(),
-        "exp": expiration,
-    });
+    let claims = Claims {
+        sub: user_response.id,
+        email: user_response.email.clone(),
+        exp: expiration,
+    };
 
     let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.as_bytes())).map_err(|_| AuthError::Token)?;
 
     let cookie_value = format!("token={}; HttpOnly; Secure; SameSite=Strict; Max-Age={}; Path=/", token, 60 * 60 * 24 * 7);
+    
     let mut response = Json(LoginResponse {
         message: "Login successful".to_string(),
         user: user_response,
