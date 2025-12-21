@@ -15,8 +15,8 @@ use axum::{
 use dotenvy::dotenv;
 use tower_http::cors::CorsLayer;
 
-use crate::core::auth;
 use crate::api::v1::{auth_api, user_api};
+use crate::core::auth;
 use crate::db::connection::{PgPool, init_pool};
 
 #[derive(Clone)]
@@ -39,11 +39,15 @@ async fn main() {
         .allow_credentials(true)
         .allow_origin("http://localhost:5173".parse::<HeaderValue>().expect("Invalid CORS origin"));
 
-    let user_router = user_api::router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
+    // Routers
+    let user_protected = user_api::router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
+    let auth_public = auth_api::public_router();
+    let auth_protected = auth_api::protected_router().route_layer(middleware::from_fn_with_state(state.clone(), auth::verify_session));
 
     let app = Router::<AppState>::new()
-        .nest("/user", user_router)
-        .nest("/auth", auth_api::router())
+        .nest("/user", user_protected)
+        .nest("/auth", auth_public)
+        .nest("/auth", auth_protected)
         .layer(cors)
         .with_state(state);
 
