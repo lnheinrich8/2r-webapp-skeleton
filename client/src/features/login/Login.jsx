@@ -33,8 +33,8 @@ const Login = () => {
 
             const res = await axios.post(
                 `${API_BASE_URL}/auth/login`,
-                { email, password }
-                // { withCredentials: true }
+                { email, password },
+                { withCredentials: true }
             );
 
             // setUser(res.data.user);

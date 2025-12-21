@@ -5,7 +5,7 @@ use serde::Serialize;
 
 // RESPONSE SCHEMAS
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 pub struct UserResponse {
     pub id: i64,
     pub email: String,

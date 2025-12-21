@@ -12,8 +12,8 @@ pub fn router() -> Router<AppState> {
         .route("/register", post(register))
 }
 
-pub async fn login(State(state): State<AppState>, Json(payload): Json<LoginRequest>) -> Result<Json<UserResponse>, AuthError> {
-    auth_service::login(&state.db_pool, &payload.email, &payload.password).map(Json)
+pub async fn login(State(state): State<AppState>, Json(payload): Json<LoginRequest>) -> Result<impl axum::response::IntoResponse, AuthError> {
+    auth_service::login(&state.db_pool, &state.jwt_secret, &payload.email, &payload.password)
 }
 
 pub async fn register(State(state): State<AppState>, Json(payload): Json<RegisterRequest>) -> Result<Json<UserResponse>, AuthError> {

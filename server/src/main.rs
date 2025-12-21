@@ -18,6 +18,7 @@ use crate::db::connection::{init_pool, PgPool};
 #[derive(Clone)]
 pub struct AppState {
     pub db_pool: PgPool,
+    pub jwt_secret: String,
 }
 
 #[tokio::main]
@@ -25,11 +26,16 @@ async fn main() {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = init_pool(&database_url);
-    let state = AppState { db_pool: pool };
+    let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+    let state = AppState {
+        db_pool: pool,
+        jwt_secret,
+    };
 
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])
         .allow_headers([CONTENT_TYPE])
+        .allow_credentials(true)
         .allow_origin(
             "http://localhost:5173"
                 .parse::<HeaderValue>()

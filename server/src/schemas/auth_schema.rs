@@ -1,4 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+
+use crate::schemas::user_schema::UserResponse;
 
 // PAYLOAD SCHEMAS
 
@@ -17,3 +19,9 @@ pub struct RegisterRequest {
 }
 
 // RESPONSE SCHEMAS
+
+#[derive(Serialize)]
+pub struct LoginResponse {
+    pub message: String,
+    pub user: UserResponse,
+}
