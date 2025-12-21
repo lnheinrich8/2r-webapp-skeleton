@@ -8,7 +8,7 @@ use crate::schemas::user_schema::UserResponse;
 use crate::utils::mapper;
 
 pub fn login(pool: &PgPool, email: &str, password: &str) -> AuthResult<UserResponse> {
-    let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
+    let mut conn = pool.get().map_err(|_| AuthError::Pool)?; // try to make connection to the r2d2 pool and propagate upwards if error
     let user = user_repo::get_by_email_and_password(&mut conn, email, password).map_err(|err| match err {
         Error::NotFound => AuthError::Unauthorized,
         _ => AuthError::Database,

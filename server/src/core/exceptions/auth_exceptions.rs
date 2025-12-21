@@ -1,5 +1,7 @@
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
+use axum::Json;
+use serde::Serialize;
 
 pub type AuthResult<T> = Result<T, AuthError>;
 
@@ -11,13 +13,23 @@ pub enum AuthError {
     Pool,
 }
 
+#[derive(Serialize)]
+struct AuthErrorResponse {
+    error: String,
+}
+
 impl IntoResponse for AuthError {
     fn into_response(self) -> Response {
-        let status = match self {
-            AuthError::Unauthorized => StatusCode::UNAUTHORIZED,
-            AuthError::Conflict => StatusCode::CONFLICT,
-            AuthError::Database | AuthError::Pool => StatusCode::INTERNAL_SERVER_ERROR,
+        let (status, message) = match self {
+            AuthError::Unauthorized => (StatusCode::UNAUTHORIZED, "Invalid credentials"),
+            AuthError::Conflict => (StatusCode::CONFLICT, "User already exists"),
+            AuthError::Database | AuthError::Pool => {
+                (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error")
+            }
         };
-        status.into_response()
+        let body = Json(AuthErrorResponse {
+            error: message.to_string(),
+        });
+        (status, body).into_response()
     }
 }
