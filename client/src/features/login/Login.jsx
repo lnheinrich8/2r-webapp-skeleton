@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-// import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../auth/AuthContext';
 // import { hybridEncrypt, loadPublicKeyFromPemUrl } from '../utils/EncryptPayload';
 import API_BASE_URL from '../shared/utils/api';
 
 import './login.css';
 
 const Login = () => {
-    // const { setUser, checkAuth } = useAuth();
+    const { setUser, checkAuth } = useAuth();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -37,7 +37,7 @@ const Login = () => {
                 { withCredentials: true }
             );
 
-            // setUser(res.data.user);
+            setUser(res.data.user);
             navigate('/dashboard');
             checkAuth();
         } catch (err) {

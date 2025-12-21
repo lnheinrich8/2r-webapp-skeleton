@@ -13,16 +13,18 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuth = async () => {
         try {
+            setLoading(true);
             const res = await axios.get(`${API_BASE_URL}/auth/getcurrent`, { withCredentials: true });
             setUser(res.data);
         } catch {
+            setLoading(false);
             setUser(null);
         } finally {
             setLoading(false);
         }
     };
 
-    // On refresh
+    // On mount
     useEffect(() => {
         checkAuth();
     }, []);
