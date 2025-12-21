@@ -37,8 +37,9 @@ fn extract_token(headers: &HeaderMap) -> Option<String> {
     let cookie_header = headers.get(header::COOKIE)?; // if cookie does not exist, function short circuits and returns None
     let cookie_str = cookie_header.to_str().ok()?;
 
+    // Find token in cookie
     cookie_str.split(';').find_map(|pair| {
-        let mut parts = pair.trim().splitn(2, '=');
+        let mut parts = pair.trim().splitn(2, '='); // split into name and value
         match (parts.next(), parts.next()) {
             (Some(name), Some(value)) if name == "token" => Some(value.to_string()),
             _ => None,

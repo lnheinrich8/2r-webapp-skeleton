@@ -47,7 +47,7 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
     let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_secret.as_bytes())).map_err(|_| AuthError::Token)?;
 
     let cookie_value = format!("token={}; HttpOnly; Secure; SameSite=Strict; Max-Age={}; Path=/", token, 60 * 60 * 24 * 7);
-    
+
     let mut response = Json(LoginResponse {
         message: "Login successful".to_string(),
         user: user_response,
@@ -55,9 +55,7 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
     .into_response();
 
     // Insert the cookie into the response
-    response
-        .headers_mut()
-        .insert(header::SET_COOKIE, HeaderValue::from_str(&cookie_value).map_err(|_| AuthError::Token)?);
+    response.headers_mut().insert(header::SET_COOKIE, HeaderValue::from_str(&cookie_value).map_err(|_| AuthError::Token)?);
 
     Ok(response)
 }
