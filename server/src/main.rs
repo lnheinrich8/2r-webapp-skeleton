@@ -17,12 +17,13 @@ use tower_http::cors::CorsLayer;
 
 use crate::api::v1::{auth_api, user_api};
 use crate::core::auth;
-use crate::db::connection::{PgPool, init_pool};
+use crate::db::connection::{init_pool, PgPool};
 
 #[derive(Clone)]
 pub struct AppState {
     pub db_pool: PgPool,
     pub jwt_secret: String,
+    pub jwt_email_secret: String,
 }
 
 #[tokio::main]
@@ -31,7 +32,12 @@ async fn main() {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let pool = init_pool(&database_url);
     let jwt_secret = env::var("JWT_SECRET").expect("JWT_SECRET must be set");
-    let state = AppState { db_pool: pool, jwt_secret };
+    let jwt_email_secret = env::var("JWT_EMAIL_SECRET").expect("JWT_EMAIL_SECRET must be set");
+    let state = AppState {
+        db_pool: pool,
+        jwt_secret,
+        jwt_email_secret,
+    };
 
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::POST])

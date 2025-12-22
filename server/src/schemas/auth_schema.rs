@@ -18,10 +18,20 @@ pub struct RegisterRequest {
     pub password: String,
 }
 
+#[derive(Deserialize)]
+pub struct VerificationQuery {
+    pub token: String,
+}
+
 // RESPONSE SCHEMAS
 
 #[derive(Serialize)]
 pub struct LoginResponse {
     pub message: String,
     pub user: UserResponse,
+}
+
+#[derive(Serialize)]
+pub struct RegisterValidateResponse {
+    pub message: String
 }

@@ -1,15 +1,23 @@
-use std::env;
-
+use serde::{Deserialize, Serialize};
 use lettre::message::{header::ContentType, Mailbox, MultiPart, SinglePart};
 use lettre::transport::smtp::authentication::Credentials;
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
+use std::env;
 
 use crate::core::exceptions::auth_exceptions::AuthError;
 
 const SMTP_HOST: &str = "smtp.gmail.com";
 
+#[derive(Serialize, Deserialize)]
+pub struct RegisterValidateClaims {
+    pub firstname: String,
+    pub lastname: String,
+    pub email: String,
+    pub password: String,
+}
+
 pub async fn registration_verification(email: &str, token: &str) -> Result<(), AuthError> {
-    let verification_link = format!("http://localhost:5000/auth/verifyregistration?token={token}"); // TODOO need to create handler
+    let verification_link = format!("http://localhost:5173/auth/verifyregister?token={token}"); // TODOO need to create handler
     let body = format!(
         r#"
         <p>Click the link to complete your registration:</p>
@@ -21,19 +29,18 @@ pub async fn registration_verification(email: &str, token: &str) -> Result<(), A
     send_email(email, "Verify your email", &body).await
 }
 
-//
-pub async fn update_email_verification(new_email: &str, token: &str) -> Result<(), AuthError> {
-    let verification_link = format!("http://localhost:5000/auth/verifyemail?token={token}"); // TODOO need to create handler
-    let body = format!(
-        r#"
-        <p>Click the link to finish updating your email:</p>
-        <a href="{link}">{link}</a>
-        "#,
-        link = verification_link
-    );
+// pub async fn update_email_verification(new_email: &str, token: &str) -> Result<(), AuthError> {
+//     let verification_link = format!("http://localhost:5173/auth/verifyemail?token={token}"); // TODOO need to create handler
+//     let body = format!(
+//         r#"
+//         <p>Click the link to finish updating your email:</p>
+//         <a href="{link}">{link}</a>
+//         "#,
+//         link = verification_link
+//     );
 
-    send_email(new_email, "Verify your email", &body).await
-}
+//     send_email(new_email, "Verify your email", &body).await
+// }
 
 // Send the email with the transport
 async fn send_email(recipient: &str, subject: &str, html_body: &str) -> Result<(), AuthError> {

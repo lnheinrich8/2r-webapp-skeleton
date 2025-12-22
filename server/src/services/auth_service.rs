@@ -2,7 +2,6 @@ use bcrypt::{DEFAULT_COST, hash, verify};
 use chrono::{Duration, Utc};
 use diesel::result::Error;
 use jsonwebtoken::{EncodingKey, Header, encode};
-
 use axum::{
     Json,
     http::{HeaderValue, header},
@@ -16,7 +15,7 @@ use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
 use crate::schemas::auth_schema::LoginResponse;
 use crate::schemas::user_schema::UserResponse;
-use crate::utils::mapper;
+use crate::utils::{emailer, mapper};
 
 pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?; // try to make connection to the r2d2 pool and propagate upwards if error
@@ -60,15 +59,56 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
     Ok(response)
 }
 
-pub fn register(pool: &PgPool, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<UserResponse> {
+pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<()> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
+    if user_repo::get_by_email(&mut conn, email).is_ok() {
+        return Err(AuthError::Conflict);
+    }
+
     let hashed_password = hash(password, DEFAULT_COST).map_err(|_| AuthError::Hash)?;
-    let new_user = NewUser {
-        email,
-        password: &hashed_password,
-        firstname,
-        lastname,
+    let claims = emailer::RegisterValidateClaims {
+        firstname: firstname.to_string(),
+        lastname: lastname.to_string(),
+        email: email.to_string(),
+        password: hashed_password,
     };
+
+    let token = encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(jwt_email_secret.as_bytes()),
+    )
+    .map_err(|_| AuthError::Token)?;
+
+    emailer::registration_verification(email, &token)
+        .await
+        .map_err(|_| AuthError::Email)?;
+
+    Ok(())
+}
+
+pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserResponse> {
+    use jsonwebtoken::{decode, DecodingKey, Validation};
+
+    let token_data = decode::<emailer::RegisterValidateClaims>(
+        token,
+        &DecodingKey::from_secret(jwt_email_secret.as_bytes()),
+        &Validation::default(),
+    )
+    .map_err(|_| AuthError::Token)?;
+
+    let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
+    if user_repo::get_by_email(&mut conn, &token_data.claims.email).is_ok() {
+        return Err(AuthError::Conflict);
+    }
+
+    let new_user = NewUser {
+        email: &token_data.claims.email,
+        password: &token_data.claims.password,
+        firstname: &token_data.claims.firstname,
+        lastname: &token_data.claims.lastname,
+    };
+
     let user = user_repo::create(&mut conn, &new_user).map_err(|err| match err {
         Error::DatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _) => AuthError::Conflict,
         _ => AuthError::Database,
