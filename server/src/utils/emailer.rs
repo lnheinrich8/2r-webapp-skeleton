@@ -17,7 +17,7 @@ pub struct RegisterValidateClaims {
 }
 
 pub async fn registration_verification(email: &str, token: &str) -> Result<(), AuthError> {
-    let verification_link = format!("http://localhost:5173/auth/verifyregister?token={token}"); // TODOO need to create handler
+    let verification_link = format!("http://localhost:5000/auth/verifyregister?token={token}"); // TODOO need to create handler
     let body = format!(
         r#"
         <p>Click the link to complete your registration:</p>
@@ -30,7 +30,7 @@ pub async fn registration_verification(email: &str, token: &str) -> Result<(), A
 }
 
 // pub async fn update_email_verification(new_email: &str, token: &str) -> Result<(), AuthError> {
-//     let verification_link = format!("http://localhost:5173/auth/verifyemail?token={token}"); // TODOO need to create handler
+//     let verification_link = format!("http://localhost:5000/auth/verifyemail?token={token}"); // TODOO need to create handler
 //     let body = format!(
 //         r#"
 //         <p>Click the link to finish updating your email:</p>
