@@ -13,6 +13,7 @@ pub enum AuthError {
     Pool,
     Hash,
     Token,
+    Email,
 }
 
 #[derive(Serialize)]
@@ -27,6 +28,7 @@ impl IntoResponse for AuthError {
             AuthError::Conflict => (StatusCode::CONFLICT, "User already exists"),
             AuthError::Hash => (StatusCode::INTERNAL_SERVER_ERROR, "Password processing failed"),
             AuthError::Token => (StatusCode::INTERNAL_SERVER_ERROR, "Token processing failed"),
+            AuthError::Email => (StatusCode::INTERNAL_SERVER_ERROR, "Email delivery failed"),
             AuthError::Database | AuthError::Pool => {
                 (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error")
             }
