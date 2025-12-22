@@ -10,7 +10,7 @@
     flex-direction: column;
     gap: 20px;
     padding: 2rem 2.5rem;
-    border-radius: 5px;
+    border-radius: 15px;
     width: 100%;
     max-width: 400px;
 
@@ -37,13 +37,12 @@
 .register-link {
     font-weight: 600;
     cursor: pointer;
-    text-decoration: underline;
+    text-decoration: none;
 
-    color: rgb(27, 155, 106);
+    color: rgb(155, 136, 27);
 }
-
 .register-link:hover {
-    color: rgb(20, 116, 79);
+    color: rgb(107, 94, 19);
 }
 
 .message-error {

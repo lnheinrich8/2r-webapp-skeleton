@@ -5,7 +5,7 @@ body {
 
     font-family: 'Roboto', sans-serif;
     color: black;
-    background-color: rgb(26, 26, 26);
+    background-color: rgb(0, 11, 27);
 }
 
 * {
@@ -24,12 +24,12 @@ body {
     font-size: 1rem;
     cursor: pointer;
 
-    border: solid 2px rgb(27, 155, 106);
+    border: solid 2px rgb(155, 136, 27);
     color: black;
     background-color: rgb(240, 240, 240);
 }
 .general-button-1:hover {
-    background-color: rgba(27, 155, 106, 0.041);
+    background-color: rgba(179, 144, 29, 0.061);
 }
 
 /* Inputs */
