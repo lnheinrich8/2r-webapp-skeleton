@@ -14,10 +14,12 @@ pub struct RegisterValidateClaims {
     pub lastname: String,
     pub email: String,
     pub password: String,
+    pub exp: usize
 }
 
 pub async fn registration_verification(email: &str, token: &str) -> Result<(), AuthError> {
-    let verification_link = format!("http://localhost:5000/auth/verifyregister?token={token}"); // TODOO need to create handler
+    let verification_link = format!("http://localhost:5000/auth/verifyregister?token={}", token);
+    
     let body = format!(
         r#"
         <p>Click the link to complete your registration:</p>

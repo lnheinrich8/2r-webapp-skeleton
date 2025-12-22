@@ -61,16 +61,23 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
 
 pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<()> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
-    if user_repo::get_by_email(&mut conn, email).is_ok() {
+    if user_repo::get_by_email(&mut conn, email).is_ok() { // check if user already exists
         return Err(AuthError::Conflict);
     }
 
-    let hashed_password = hash(password, DEFAULT_COST).map_err(|_| AuthError::Hash)?;
+    let hashed_password = hash(password, DEFAULT_COST).map_err(|_| AuthError::Hash)?; // hash with bcrypt
+
+    let expiration = Utc::now() // 1 day verification token expiration
+        .checked_add_signed(Duration::days(1))
+        .ok_or(AuthError::Token)?
+        .timestamp() as usize;
+
     let claims = emailer::RegisterValidateClaims {
         firstname: firstname.to_string(),
         lastname: lastname.to_string(),
         email: email.to_string(),
         password: hashed_password,
+        exp: expiration,
     };
 
     let token = encode(
