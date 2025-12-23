@@ -14,10 +14,13 @@
     border: none;
     border-radius: 15px;
     background-color: rgb(0, 2, 5);
+
+    animation: sidebar-open 0.25s ease forwards;
 }
 
 .sidebar.collapsed {
     width: 74px;
+    animation: sidebar-close 0.25s ease forwards;
 }
 
 .collapse-button {
@@ -25,9 +28,9 @@
     align-items: center;
     justify-content: center;
 
-    margin-left: 11px;
+    margin-left: 12px;
     margin-top: 12px;
-    margin-bottom: 11px;
+    /* margin-bottom: 11px; */
     padding-bottom: 2px;
 
     border-radius: 4px;
@@ -47,4 +50,22 @@
 .collapse-icon {
     color: rgb(160, 160, 160);
     margin-bottom: 2px;
+}
+
+@keyframes sidebar-open {
+    0% {
+        width: 74px;
+    }
+    100% {
+        width: 240px;
+    }
+}
+
+@keyframes sidebar-close {
+    0% {
+        width: 240px;
+    }
+    100% {
+        width: 74px;
+    }
 }
