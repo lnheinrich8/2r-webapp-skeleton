@@ -22,7 +22,7 @@ body {
     display: flex;
     flex-direction: column; 
 }
-.notsidebar-container.expanded {
+.notsidebar-container.collapsed {
     margin-left: 74px;
 }
 

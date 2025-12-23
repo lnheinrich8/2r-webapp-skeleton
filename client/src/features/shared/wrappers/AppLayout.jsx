@@ -8,7 +8,7 @@ const AppLayout = () => {
     return (
         <div className="app-layout">
             <Sidebar collapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed} />
-            <div className={`notsidebar-container ${sidebarCollapsed ? 'expanded' : ''}`}>
+            <div className={`notsidebar-container ${sidebarCollapsed ? 'collapsed' : ''}`}>
                 <Outlet />
             </div>
         </div>
