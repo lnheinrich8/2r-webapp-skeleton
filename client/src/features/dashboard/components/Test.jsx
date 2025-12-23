@@ -3,9 +3,6 @@ import axios from 'axios';
 
 import API_BASE_URL from '../../shared/utils/api';
 
-// Styling
-import './test.css';
-
 const Test = () => {
 
     const [testData, setTestData] = useState(null);

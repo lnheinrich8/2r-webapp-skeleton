@@ -21,11 +21,10 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column; 
-    animation: content-slide-open 0.25s ease forwards;
+    transition: margin-left 0.25s ease;
 }
 .notsidebar-container.collapsed {
-    margin-left: 94px;
-    animation: content-slide-close 0.25s ease forwards;
+    margin-left: 95px;
 }
 
 /* Buttons */
@@ -56,22 +55,4 @@ body {
 .general-input-1:focus {
     border-color: rgb(181, 184, 0);
     outline: none;
-}
-
-@keyframes content-slide-open {
-    0% {
-        margin-left: 94px;
-    }
-    100% {
-        margin-left: 260px;
-    }
-}
-
-@keyframes content-slide-close {
-    0% {
-        margin-left: 260px;
-    }
-    100% {
-        margin-left: 94px;
-    }
 }
