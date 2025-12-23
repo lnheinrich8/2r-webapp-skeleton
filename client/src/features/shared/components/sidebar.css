@@ -24,14 +24,10 @@
 }
 
 .collapse-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    margin-left: 12px;
-    margin-top: 12px;
-    /* margin-bottom: 11px; */
-    padding-bottom: 2px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding-bottom: 5px;
 
     border-radius: 4px;
     width: 50px;
