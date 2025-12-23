@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 
 const AppLayout = () => {
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
     return (
         <div className="app-layout">

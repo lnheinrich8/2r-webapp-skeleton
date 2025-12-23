@@ -5,8 +5,10 @@ import './sidebar.css';
 
 // Assets
 import dashboard_icon from '../../../assets/dashboard_icon.png';
+import stats_icon from '../../../assets/stats_icon.png';
 
 const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
+    const location = useLocation();
 
     return (
         <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -23,6 +25,18 @@ const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
                         className={`sidebar-button-icon ${location.pathname === '/dashboard' ? 'active' : ''}`}
                     />
                     {!collapsed && <span className="sidebar-button-text">Dashboard</span>}
+                </button>
+            </Link>
+
+            <Link to="/stats">
+                <button className={`sidebar-button ${location.pathname === '/stats' ? 'active' : ''}`}>
+                    <img
+                        src={stats_icon}
+                        alt="Stats Icon"
+                        draggable="false"
+                        className={`sidebar-button-icon ${location.pathname === '/stats' ? 'active' : ''}`}
+                    />
+                    {!collapsed && <span className="sidebar-button-text">Stats</span>}
                 </button>
             </Link>
 
