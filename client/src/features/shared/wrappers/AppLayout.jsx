@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import Sidebar from './components/Sidebar';
+import Sidebar from '../components/Sidebar';
 
 const AppLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
