@@ -1,11 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 
+// Components
+import './UserTile';
+
 // Styling
 import './sidebar.css';
 
 // Assets
-import dashboard_icon from '../../../assets/dashboard_icon.png';
-import stats_icon from '../../../assets/stats_icon.png';
+import dashboard_icon from '../../../../assets/dashboard_icon.png'; // lmao this path
+import stats_icon from '../../../../assets/stats_icon.png';
 
 const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
     const location = useLocation();

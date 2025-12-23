@@ -6,7 +6,6 @@ import { useAuth } from '../auth/AuthContext';
 
 // Components
 import Loading from '../shared/components/Loading';
-import Test from './components/Test';
 
 // Styling
 import './dashboard.css';
@@ -20,7 +19,7 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-main">
-            <Test />
+
         </div>
     )
 }
