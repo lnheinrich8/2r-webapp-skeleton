@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 
 // Components
-import './UserTile';
+import UserTile from './UserTile';
 
 // Styling
 import './sidebar.css';
