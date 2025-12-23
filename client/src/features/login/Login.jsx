@@ -6,6 +6,7 @@ import { useAuth } from '../auth/AuthContext';
 // import { hybridEncrypt, loadPublicKeyFromPemUrl } from '../utils/EncryptPayload';
 import API_BASE_URL from '../shared/utils/api';
 
+// Styling
 import './login.css';
 
 const Login = () => {

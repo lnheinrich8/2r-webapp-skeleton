@@ -8,6 +8,8 @@ import { useAuth } from '../auth/AuthContext';
 import Loading from '../shared/components/Loading';
 import Test from './components/Test';
 
+// Styling
+import './dashboard.css';
 
 const Dashboard = () => {
     const { user, loading } = useAuth(); // user authorization
@@ -17,9 +19,9 @@ const Dashboard = () => {
     if (!user) return <Navigate to="/" />;
 
     return (
-        <>
+        <div className="dashboard-main">
             <Test />
-        </>
+        </div>
     )
 }
 
