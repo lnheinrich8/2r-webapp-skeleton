@@ -12,7 +12,7 @@
     margin-right: 0px;
     overflow: hidden;
 
-    border: none;
+    border: solid 1px rgba(131, 131, 131, 0.519);
     border-radius: 15px;
     background-color: rgb(0, 2, 5);
     transition: width 0.25s ease;
@@ -30,7 +30,7 @@
     height: 50px;
     margin-left: 12px;
     margin-top: 13px;
-    padding-bottom: 5px;
+    margin-bottom: 12px;
 
     border-radius: 10px;
     font-size: 1.9rem;
@@ -45,5 +45,53 @@
 
 .collapse-icon {
     color: rgb(160, 160, 160);
-    margin-bottom: 2px;
+    margin-bottom: 6px;
+}
+
+.sidebar-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+
+    box-sizing: border-box;
+    cursor: pointer;
+
+    font-size: 0.9rem;
+    border: none;
+    border-left: 4px solid transparent;
+    color: rgb(140, 140, 140);
+    background-color: rgba(255, 0, 0, 0);
+}
+.sidebar-button:hover {
+    color: white;
+}
+.sidebar-button:hover .sidebar-button-icon {
+    filter: invert(100%) brightness(200%);
+}
+.sidebar-button.active {
+    background-color: #31313170;
+    color: #ffffff;
+    border-left: 4px solid rgb(20, 85, 135);
+}
+
+.sidebar a,
+.sidebar a:focus,
+.sidebar a:active {
+    text-decoration: none;
+}
+
+.sidebar-button-icon {
+    width: 27px;
+    height: 27px;
+    object-fit: contain;
+    filter: invert(100%) brightness(45%);
+
+    margin-left: 7px;
+}
+
+.sidebar-button-icon.active {
+    filter: invert(100%) brightness(200%);
 }
