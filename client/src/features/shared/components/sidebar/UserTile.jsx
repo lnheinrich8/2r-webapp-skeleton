@@ -11,15 +11,17 @@ import './usertile.css';
 import default_pfp from '../../../../assets/default_pfp.png';
 
 const UserTile = () => {
-    const { user } = useAuth(); // for user info
+    const { user, loading } = useAuth(); // for user info
+
+    if (loading || !user) return null;
 
     return (
         <div className="usertile-main">
             <img className="usertile_pfp" src={default_pfp}/>
 
             <div className="usertile-name">
-                <p className="usertile-firstname">Luke</p>
-                <p className="usertile-lastname">Heinrich</p>
+                <p className="usertile-firstname">{user.firstname}</p>
+                <p className="usertile-lastname">{user.lastname}</p>
             </div>
         
         </div>
