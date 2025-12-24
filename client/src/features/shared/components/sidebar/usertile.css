@@ -1,23 +1,36 @@
 .usertile-main {
     display: flex;
     flex: 1;
+
     min-width: 0;
     box-sizing: border-box;
     height: 50px;
     align-items: center;
     margin: 12px;
-    margin-left: 1px;
+    margin-left: 0;
+    padding-right: 10px;
+    max-width: 999px; /* for the transition */
     overflow: hidden;
 
+    opacity: 1;
     border: 1px solid rgb(121, 121, 121);
     border-radius: 25px 10px 10px 25px;
+    transition: opacity 0.25s ease, max-width 0.25s ease, margin 0.25s ease, padding 0.25s ease;
+}
+
+.sidebar.collapsed .usertile-main {
+    opacity: 0;
+    max-width: 0;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    pointer-events: none;
 }
 
 .usertile_pfp {
     box-sizing: border-box;
     height: 50px;
     width: 50px;
-    border: solid 1px white;
     border-radius: 50%;
 }
 
