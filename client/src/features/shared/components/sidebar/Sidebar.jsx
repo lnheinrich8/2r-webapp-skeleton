@@ -15,9 +15,15 @@ const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
 
     return (
         <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-            <button className="collapse-button" onClick={() => setSidebarCollapsed(prev => !prev)}>
-                <span className="collapse-icon">☰</span>
-            </button>
+            <div className="top-sidebar-container">
+
+                <button className="collapse-button" onClick={() => setSidebarCollapsed(prev => !prev)}>
+                    <span className="collapse-icon">☰</span>
+                </button>
+
+                <UserTile />
+
+            </div>
 
             <Link to="/dashboard">
                 <button className={`sidebar-button ${location.pathname === '/dashboard' ? 'active' : ''}`}>
