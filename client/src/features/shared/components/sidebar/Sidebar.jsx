@@ -10,7 +10,7 @@ import './sidebar.css';
 import dashboard_icon from '../../../../assets/dashboard_icon.png'; // lmao this path
 import stats_icon from '../../../../assets/stats_icon.png';
 
-const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
+const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
     const location = useLocation();
 
     return (
@@ -21,7 +21,7 @@ const Sidebar = ({ collapsed, setSidebarCollapsed }) => {
                     <span className="collapse-icon">☰</span>
                 </button>
 
-                <UserTile />
+                <UserTile onOpenSettings={onOpenSettings}/>
 
             </div>
 

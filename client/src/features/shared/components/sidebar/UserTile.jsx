@@ -10,18 +10,18 @@ import './usertile.css';
 // Assets
 import default_pfp from '../../../../assets/default_pfp.png';
 
-const UserTile = () => {
+const UserTile = ({ onOpenSettings }) => {
     const { user, loading } = useAuth(); // for user info
 
     if (loading || !user) return null;
 
     return (
-        <div className="usertile-main">
-            <img className="usertile_pfp" src={default_pfp}/>
+        <div className="usertile-main" onClick={onOpenSettings}>
+            <img className="usertile_pfp" src={default_pfp} draggable="false" />
 
             <div className="usertile-name">
                 <p className="usertile-firstname">{user.firstname}</p>
-                <p className="usertile-lastname">{user.lastname}ss</p>
+                <p className="usertile-lastname">{user.lastname}</p>
             </div>
         
         </div>
