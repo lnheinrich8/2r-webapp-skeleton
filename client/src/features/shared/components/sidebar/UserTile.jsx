@@ -16,7 +16,12 @@ const UserTile = () => {
     return (
         <div className="usertile-main">
             <img className="usertile_pfp" src={default_pfp}/>
-            <p className="usertile-name">Tester Testing</p>
+
+            <div className="usertile-name">
+                <p className="usertile-firstname">Luke</p>
+                <p className="usertile-lastname">Heinrich</p>
+            </div>
+        
         </div>
     )
 }
