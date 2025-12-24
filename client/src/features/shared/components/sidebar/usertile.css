@@ -9,13 +9,25 @@
     margin: 12px;
     margin-left: 0;
     padding-right: 10px;
-    max-width: 999px; /* for the transition */
+    max-width: 999px;
     overflow: hidden;
 
     opacity: 1;
-    border: 1px solid rgb(121, 121, 121);
+    border: 1px solid rgba(130, 130, 130, 0.5);
     border-radius: 25px 10px 10px 25px;
-    transition: opacity 0.25s ease, max-width 0.25s ease, margin 0.25s ease, padding 0.25s ease;
+    
+    transition:
+        opacity 0.25s ease, 
+        max-width 0.25s ease, 
+        margin 0.25s ease, 
+        padding 0.25s ease,
+        transform 0.2s ease, 
+        box-shadow 0.2s ease;
+}
+
+.usertile-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(255, 255, 255, 0.514);
 }
 
 .sidebar.collapsed .usertile-main {
