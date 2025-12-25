@@ -11,13 +11,27 @@ const SettingsModal = ({ isOpen, onClose }) => {
     };
 
     return (
-        <div className="settings-modal-overlay" onMouseDown={handleOverlayMouseDown}>
-            <div className="settings-modal-main" role="dialog" aria-modal="true">
+        <div className="sm-overlay" onMouseDown={handleOverlayMouseDown}>
+            <div className="sm-main" role="dialog" aria-modal="true">
                 <button className="settings-modal-close" aria-label="Close settings" onClick={onClose}>
                     ×
                 </button>
-                <h2 className="settings-modal-title">Settings</h2>
-                <p className="settings-modal-body">Settings content goes here.</p>
+                <h2 className="sm-title">Settings</h2>
+
+                <hr className="sm-horizontal-divider" />
+
+                <div className="sm-section-content-container">
+                    
+                    <div className="sm-sections-container">
+
+                    </div>
+
+                    <vr className="sm-vertical-divider" />
+
+                    <div className="sm-content-container">
+
+                    </div>
+                </div>
             </div>
         </div>
     );

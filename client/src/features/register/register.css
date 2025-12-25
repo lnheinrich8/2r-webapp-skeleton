@@ -17,7 +17,7 @@
     width: 100%;
     max-width: 400px;
 
-    background-color: rgb(230, 230, 230); /* Dis a big one */
+    background-color: rgb(230, 230, 230);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .register-form h2 {
