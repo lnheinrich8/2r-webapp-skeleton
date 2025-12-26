@@ -1,4 +1,8 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+import { useAuth } from '../../../auth/AuthContext';
+import API_BASE_URL from '../../utils/api';
 
 // Components
 import UserTile from './UserTile';
@@ -11,7 +15,20 @@ import dashboard_icon from '../../../../assets/dashboard_icon.png'; // lmao this
 import stats_icon from '../../../../assets/stats_icon.png';
 
 const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
+    const { setUser } = useAuth();
+
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await axios.get(`${API_BASE_URL}/auth/logout`, { withCredentials: true });
+            setUser(null);
+            navigate('/');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    }
 
     return (
         <div className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
@@ -21,7 +38,7 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
                     <span className="collapse-icon">☰</span>
                 </button>
 
-                <UserTile onOpenSettings={onOpenSettings}/>
+                <UserTile onOpenSettings={onOpenSettings} />
 
             </div>
 
@@ -48,6 +65,8 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
                     {!collapsed && <span className="sidebar-button-text">Stats</span>}
                 </button>
             </Link>
+
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
 
         </div>
     );
