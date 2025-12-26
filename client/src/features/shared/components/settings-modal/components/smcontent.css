@@ -1,6 +1,32 @@
 .sm-content-main {
     display: flex;
     flex-direction: column;
-    
+    gap: 10px;
+}
 
+.sm-content-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 10px;
+
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+}
+
+.sm-content-label {
+    font-size: 0.9rem;
+
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.sm-content-value {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 600;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

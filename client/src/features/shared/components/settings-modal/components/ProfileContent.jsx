@@ -11,9 +11,22 @@ const ProfileContent = () => {
 
     return (
         <div className="sm-content-main">
-            <p>{user.firstname}</p>
-            <p>{user.lastname}</p>
-            <p>{user.email}</p>
+            
+            <div className="sm-content-row">
+                <span className="sm-content-label">First Name</span>
+                <span className="sm-content-value">{user.firstname}</span>
+            </div>
+
+            <div className="sm-content-row">
+                <span className="sm-content-label">Last Name</span>
+                <span className="sm-content-value">{user.lastname}</span>
+            </div>
+            
+            <div className="sm-content-row">
+                <span className="sm-content-label">Email</span>
+                <span className="sm-content-value">{user.email}</span>
+            </div>
+        
         </div>
     )
 }
