@@ -4,19 +4,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px 0;
     z-index: 999;
 
     background: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(2px);
+    overflow-y: auto;
 }
 
 .sm-main {
     position: relative;
     display: flex;
-    height: 700px;
     flex-direction: column;
     width: min(600px, calc(100% - 40px));
-    min-height: 240px;
+    height: clamp(500px, calc(100vh - 42px), 700px);
+    min-height: 500px;
 
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 18px;
@@ -91,4 +93,11 @@
     margin-top: 16px;
     font-size: 0.95rem;
     color: #d3d3d3;
+}
+
+
+@media (max-height: 542px) {
+    .sm-overlay {
+        align-items: flex-start;
+    }
 }
