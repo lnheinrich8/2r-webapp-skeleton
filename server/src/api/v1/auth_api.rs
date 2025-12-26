@@ -21,11 +21,17 @@ pub fn public_router() -> Router<AppState> {
 pub fn protected_router() -> Router<AppState> {
     Router::<AppState>::new()
         .route("/getcurrent", get(get_current))
+        .route("/logout", get(logout))
 }
 
 // Login user and provide cookie with JWT
 pub async fn login(State(state): State<AppState>, Json(payload): Json<LoginRequest>) -> Result<impl axum::response::IntoResponse, AuthError> {
     auth_service::login(&state.db_pool, &state.jwt_secret, &payload.email, &payload.password)
+}
+
+// Logout current user
+pub async fn logout() -> Result<impl axum::response::IntoResponse, AuthError> {
+    auth_service::logout()
 }
 
 // Register user

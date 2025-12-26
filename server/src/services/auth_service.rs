@@ -13,7 +13,7 @@ use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
 use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
-use crate::schemas::auth_schema::LoginResponse;
+use crate::schemas::auth_schema::{ LoginResponse, LogoutResponse };
 use crate::schemas::user_schema::UserResponse;
 use crate::utils::{emailer, mapper};
 
@@ -56,6 +56,19 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
     // Insert the cookie into the response
     response.headers_mut().insert(header::SET_COOKIE, HeaderValue::from_str(&cookie_value).map_err(|_| AuthError::Token)?);
 
+    Ok(response)
+}
+
+pub fn logout() -> AuthResult<Response> {
+    let mut response = Json(LogoutResponse {
+        message: "Logged out successfully".to_string()
+    })
+    .into_response();
+
+    response.headers_mut().insert(
+        header::SET_COOKIE,
+        HeaderValue::from_static("token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/")
+    );
     Ok(response)
 }
 
