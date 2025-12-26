@@ -3,7 +3,7 @@ import { useAuth } from '../../../../auth/AuthContext';
 // Styling
 import './smcontent.css'
 
-const ProfileContent = () => {
+const DataContent = () => {
     const { user, loading } = useAuth();
 
 
@@ -11,11 +11,9 @@ const ProfileContent = () => {
 
     return (
         <div className="sm-content-main">
-            <p>{user.firstname}</p>
-            <p>{user.lastname}</p>
-            <p>{user.email}</p>            
+            data content in here
         </div>
     )
 }
 
-export default ProfileContent;
+export default DataContent;
