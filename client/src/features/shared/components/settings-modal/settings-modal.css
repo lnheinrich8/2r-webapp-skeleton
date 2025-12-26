@@ -68,8 +68,8 @@
 
     border: none;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.02);
-    color: rgb(151, 151, 151);
+    background-color: transparent;
+    color: rgb(150, 150, 150);
 }
 
 .sm-section-button:hover {

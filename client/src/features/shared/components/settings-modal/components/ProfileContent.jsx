@@ -13,7 +13,7 @@ const ProfileContent = () => {
         <div className="sm-content-main">
             <p>{user.firstname}</p>
             <p>{user.lastname}</p>
-            <p>{user.email}</p>            
+            <p>{user.email}</p>
         </div>
     )
 }
