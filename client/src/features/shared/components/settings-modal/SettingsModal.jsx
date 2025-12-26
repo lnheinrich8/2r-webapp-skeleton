@@ -31,6 +31,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                     <div className="sm-content-container">
 
                     </div>
+                    
                 </div>
             </div>
         </div>
