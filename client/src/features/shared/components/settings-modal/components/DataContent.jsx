@@ -11,7 +11,10 @@ const DataContent = () => {
 
     return (
         <div className="sm-content-main">
-            data content in here
+            <div className="sm-content-row">
+                <span className="sm-content-label">Placeholder</span>
+                <span className="sm-content-value">Placeholder</span>
+            </div>
         </div>
     )
 }
