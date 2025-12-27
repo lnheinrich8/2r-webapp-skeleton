@@ -43,6 +43,7 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
             </div>
 
             <div className="sidebar-content">
+                
                 <div className="sidebar-links">
                     <Link to="/dashboard">
                         <button className={`sidebar-button ${location.pathname === '/dashboard' ? 'active' : ''}`}>
@@ -75,6 +76,7 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
                         {!collapsed && <span className="logout-text">Logout</span>}
                     </button>
                 </div>
+
             </div>
 
         </div>
