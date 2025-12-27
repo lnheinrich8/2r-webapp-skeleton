@@ -42,31 +42,40 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
 
             </div>
 
-            <Link to="/dashboard">
-                <button className={`sidebar-button ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-                    <img
-                        src={dashboard_icon}
-                        alt="Dashboard Icon"
-                        draggable="false"
-                        className={`sidebar-button-icon ${location.pathname === '/dashboard' ? 'active' : ''}`}
-                    />
-                    {!collapsed && <span className="sidebar-button-text">Dashboard</span>}
-                </button>
-            </Link>
+            <div className="sidebar-content">
+                <div className="sidebar-links">
+                    <Link to="/dashboard">
+                        <button className={`sidebar-button ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+                            <img
+                                src={dashboard_icon}
+                                alt="Dashboard Icon"
+                                draggable="false"
+                                className={`sidebar-button-icon ${location.pathname === '/dashboard' ? 'active' : ''}`}
+                            />
+                            {!collapsed && <span className="sidebar-button-text">Dashboard</span>}
+                        </button>
+                    </Link>
 
-            <Link to="/stats">
-                <button className={`sidebar-button ${location.pathname === '/stats' ? 'active' : ''}`}>
-                    <img
-                        src={stats_icon}
-                        alt="Stats Icon"
-                        draggable="false"
-                        className={`sidebar-button-icon ${location.pathname === '/stats' ? 'active' : ''}`}
-                    />
-                    {!collapsed && <span className="sidebar-button-text">Stats</span>}
-                </button>
-            </Link>
+                    <Link to="/stats">
+                        <button className={`sidebar-button ${location.pathname === '/stats' ? 'active' : ''}`}>
+                            <img
+                                src={stats_icon}
+                                alt="Stats Icon"
+                                draggable="false"
+                                className={`sidebar-button-icon ${location.pathname === '/stats' ? 'active' : ''}`}
+                            />
+                            {!collapsed && <span className="sidebar-button-text">Stats</span>}
+                        </button>
+                    </Link>
+                </div>
 
-            <button className="logout-button" onClick={handleLogout}>Logout</button>
+                <div className="sidebar-footer">
+                    <button className="logout-button" onClick={handleLogout}>
+                        <span className="logout-icon">◄</span>
+                        {!collapsed && <span className="logout-text">Logout</span>}
+                    </button>
+                </div>
+            </div>
 
         </div>
     );
