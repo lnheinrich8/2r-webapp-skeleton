@@ -46,24 +46,41 @@ Variables:
 
 ```EMAIL_PASS```=(the app password given to you by your SMTP provider. With gmail you can get an app password in google settings)
 
+## Server Application Benchmark
+
+This benchmark compares the pure application-layer performance of the Rust Axum server with both Node.js and FastAPI servers. All tests were executed on localhost using wrk over the loopback interface, eliminating network latency and internet variability. As a result, the measurements reflect server runtime efficiency, request handling, and framework overhead only, rather than real-world network performance. The goal is to isolate and compare how efficiently each stack processes HTTP requests under identical local load conditions. Note that in real-world, internet-facing applications, most request time is dominated by network latency, so for simple applications or low traffic scenarios the performance differences between these servers are much smaller than those observed in local benchmarks. However, under high-concurrency workloads or memory-constrained environments, the Rust Axum server tends to outperform the Node.js and FastAPI servers due to lower per-request overhead and more efficient memory usage. 
+<br/><br/>
+
+**Rust Axum local benchmark:**
+
+<img width="654" height="293" alt="2r_benchmark_axum" src="https://github.com/user-attachments/assets/15a3086f-6aa2-4063-8653-6f4cd6b439cc" />
+<br/><br/>
+
+**Node.js local benchmark:**
+
+<img width="655" height="312" alt="2r_benchmark_node" src="https://github.com/user-attachments/assets/f7a3da70-62c7-43a3-a686-506c6629d3e5" />
+<br/><br/>
+
+**FastAPI local benchmark:**
+
+<img width="642" height="292" alt="2r_benchmark_fastapi" src="https://github.com/user-attachments/assets/190f1ac8-e9fd-4a61-90ec-a1b9b45d2de0" />
+<br/><br/>
+
 ## UI Pictures
 
 **Login page:**
 
 <img width="1033" height="727" alt="2r_login" src="https://github.com/user-attachments/assets/7a385864-38d4-409a-9e20-21368dcedfca" />
 <br/><br/>
-<br/><br/>
 
 **Main layout with sidebar collapsed:**
 
 <img width="1152" height="858" alt="2r_mainlayout" src="https://github.com/user-attachments/assets/a56d52ba-381a-4356-87dc-ff26a2017569" />
 <br/><br/>
-<br/><br/>
 
 **Main layout with sidebar expanded:**
 
 <img width="1152" height="858" alt="2r_mainlayout_expanded" src="https://github.com/user-attachments/assets/c16f28ba-e11f-4720-a9ee-283d4cd88d09" />
-<br/><br/>
 <br/><br/>
 
 **Settings modal:**
