@@ -2,7 +2,7 @@
 
 ## Overview
 
-The 2R Web Application Skeleton is a starter kit for teams or solo developers who want the reliability of a typed, high-performance Rust backend without giving up the rapid iteration of a modern React frontend. This skeleton delivers all of the scafolding most basic web applications need so your first sprint can focus on business logic rather than plumbing.
+The 2R Web Application Skeleton is a starter kit for developers who want the reliability of a typed, high-performance Rust backend without giving up the rapid iteration of a modern React frontend. This skeleton delivers all of the scafolding most basic web applications need so your first sprint can focus on business logic rather than plumbing.
 
 ## Server Functionality
 
