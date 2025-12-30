@@ -1,19 +1,19 @@
-use bcrypt::{DEFAULT_COST, hash, verify};
-use chrono::{Duration, Utc};
-use diesel::result::Error;
-use jsonwebtoken::{EncodingKey, Header, encode};
 use axum::{
     Json,
     http::{HeaderValue, header},
     response::{IntoResponse, Response},
 };
+use bcrypt::{DEFAULT_COST, hash, verify};
+use chrono::{Duration, Utc};
+use diesel::result::Error;
+use jsonwebtoken::{EncodingKey, Header, encode};
 
 use crate::core::auth::Claims;
 use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
 use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
-use crate::schemas::auth_schema::{ LoginResponse, AuthMessageResponse };
+use crate::schemas::auth_schema::{AuthMessageResponse, LoginResponse};
 use crate::schemas::user_schema::UserResponse;
 use crate::utils::{emailer, mapper};
 
@@ -61,20 +61,20 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
 
 pub fn logout() -> AuthResult<Response> {
     let mut response = Json(AuthMessageResponse {
-        message: "Logged out successfully".to_string()
+        message: "Logged out successfully".to_string(),
     })
     .into_response();
 
-    response.headers_mut().insert(
-        header::SET_COOKIE,
-        HeaderValue::from_static("token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/")
-    );
+    response
+        .headers_mut()
+        .insert(header::SET_COOKIE, HeaderValue::from_static("token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/"));
     Ok(response)
 }
 
 pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<()> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
-    if user_repo::get_by_email(&mut conn, email).is_ok() { // check if user already exists
+    if user_repo::get_by_email(&mut conn, email).is_ok() {
+        // check if user already exists
         return Err(AuthError::Conflict);
     }
 
@@ -93,29 +93,17 @@ pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, la
         exp: expiration,
     };
 
-    let token = encode(
-        &Header::default(),
-        &claims,
-        &EncodingKey::from_secret(jwt_email_secret.as_bytes()),
-    )
-    .map_err(|_| AuthError::Token)?;
+    let token = encode(&Header::default(), &claims, &EncodingKey::from_secret(jwt_email_secret.as_bytes())).map_err(|_| AuthError::Token)?;
 
-    emailer::registration_verification(email, &token)
-        .await
-        .map_err(|_| AuthError::Email)?;
+    emailer::registration_verification(email, &token).await.map_err(|_| AuthError::Email)?;
 
     Ok(())
 }
 
 pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserResponse> {
-    use jsonwebtoken::{decode, DecodingKey, Validation};
+    use jsonwebtoken::{DecodingKey, Validation, decode};
 
-    let token_data = decode::<emailer::RegisterValidateClaims>(
-        token,
-        &DecodingKey::from_secret(jwt_email_secret.as_bytes()),
-        &Validation::default(),
-    )
-    .map_err(|_| AuthError::Token)?;
+    let token_data = decode::<emailer::RegisterValidateClaims>(token, &DecodingKey::from_secret(jwt_email_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Token)?;
 
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
     if user_repo::get_by_email(&mut conn, &token_data.claims.email).is_ok() {

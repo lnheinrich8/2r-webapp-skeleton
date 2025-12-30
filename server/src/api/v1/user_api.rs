@@ -1,12 +1,13 @@
 use axum::{
-    extract::{Path, State},
-    routing::get,
+    extract::{Path, State, Extension},
+    routing::{get, post},
     Json, 
     Router
 };
 
 use crate::AppState;
 use crate::core::exceptions::user_exceptions::UserError;
+use crate::core::auth::Claims;
 use crate::services::user_service;
 use crate::schemas::user_schema::UserResponse;
 
@@ -14,6 +15,7 @@ pub fn protected_router() -> Router<AppState> {
     Router::<AppState>::new()
         .route("/getbyid/:id", get(get_user_by_id))
         .route("/getbyemail/:email", get(get_user_by_email))
+        .route("/update", post(update_user))
 }
 
 // Get user from db with id
@@ -26,7 +28,7 @@ pub async fn get_user_by_email(State(state): State<AppState>, Path(email): Path<
     user_service::get_by_email(&state.db_pool, &email).map(Json)
 }
 
-// // Update user information
-// pub async fn update_user(State(state): State<AppState>, ) {
-//     return
-// }
+// Update user information
+pub async fn update_user(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Result<impl axum::response::IntoResponse, UserError> {
+    user_service::update(&state.db_pool, claims.sub)
+}

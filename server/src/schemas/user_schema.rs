@@ -11,3 +11,8 @@ pub struct UserResponse {
     pub firstname: String,
     pub lastname: String,
 }
+
+#[derive(Serialize)]
+pub struct UserMessageResponse {
+    pub message: String
+}
