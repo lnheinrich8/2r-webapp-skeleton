@@ -32,11 +32,6 @@ pub struct LoginResponse {
 }
 
 #[derive(Serialize)]
-pub struct LogoutResponse {
-    pub message: String
-}
-
-#[derive(Serialize)]
-pub struct RegisterValidateResponse {
+pub struct AuthMessageResponse {
     pub message: String
 }

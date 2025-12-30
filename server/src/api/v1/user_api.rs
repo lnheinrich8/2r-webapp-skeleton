@@ -25,3 +25,8 @@ pub async fn get_user_by_id(State(state): State<AppState>, Path(id): Path<i64>) 
 pub async fn get_user_by_email(State(state): State<AppState>, Path(email): Path<String>) -> Result<Json<UserResponse>, UserError> {
     user_service::get_by_email(&state.db_pool, &email).map(Json)
 }
+
+// // Update user information
+// pub async fn update_user(State(state): State<AppState>, ) {
+//     return
+// }

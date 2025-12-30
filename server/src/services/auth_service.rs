@@ -13,7 +13,7 @@ use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
 use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
-use crate::schemas::auth_schema::{ LoginResponse, LogoutResponse };
+use crate::schemas::auth_schema::{ LoginResponse, AuthMessageResponse };
 use crate::schemas::user_schema::UserResponse;
 use crate::utils::{emailer, mapper};
 
@@ -60,7 +60,7 @@ pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> Au
 }
 
 pub fn logout() -> AuthResult<Response> {
-    let mut response = Json(LogoutResponse {
+    let mut response = Json(AuthMessageResponse {
         message: "Logged out successfully".to_string()
     })
     .into_response();
