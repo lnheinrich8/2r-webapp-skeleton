@@ -1,6 +1,17 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 // PAYLOAD SCHEMAS
+
+#[derive(Deserialize)]
+pub struct UpdateUserRequest {
+    pub firstname: String,
+    pub lastname: String
+}
+
+#[derive(Deserialize)]
+pub struct UpdateUserEmailRequest {
+    pub email: String
+}
 
 // RESPONSE SCHEMAS
 

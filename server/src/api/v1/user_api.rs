@@ -9,7 +9,7 @@ use crate::AppState;
 use crate::core::exceptions::user_exceptions::UserError;
 use crate::core::auth::Claims;
 use crate::services::user_service;
-use crate::schemas::user_schema::UserResponse;
+use crate::schemas::user_schema::{UserMessageResponse, UserResponse, UpdateUserRequest};
 
 pub fn protected_router() -> Router<AppState> {
     Router::<AppState>::new()
@@ -29,6 +29,6 @@ pub async fn get_user_by_email(State(state): State<AppState>, Path(email): Path<
 }
 
 // Update user information
-pub async fn update_user(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Result<impl axum::response::IntoResponse, UserError> {
-    user_service::update(&state.db_pool, claims.sub)
+pub async fn update_user(State(state): State<AppState>, Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserRequest>) -> Result<Json<UserMessageResponse>, UserError> {
+    user_service::update(&state.db_pool, claims.sub, &payload.firstname, &payload.lastname)
 }
