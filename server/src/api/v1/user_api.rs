@@ -1,7 +1,7 @@
 use axum::{
     Json, Router,
     extract::{Extension, Path, State},
-    routing::{get, patch},
+    routing::{get, post, patch},
 };
 
 use crate::AppState;
@@ -15,6 +15,8 @@ pub fn protected_router() -> Router<AppState> {
         .route("/getbyid/:id", get(get_user_by_id))
         .route("/getbyemail/:email", get(get_user_by_email))
         .route("/update", patch(update_user))
+        .route("/updatemail", post(update_user_email))
+        .route("/verifyemail", patch(verify_update_user_email))
 }
 
 // Get user from db with id
@@ -30,4 +32,14 @@ pub async fn get_user_by_email(State(state): State<AppState>, Path(email): Path<
 // Update user information and return new user
 pub async fn update_user(State(state): State<AppState>, Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserRequest>) -> Result<Json<UserResponse>, UserError> {
     user_service::update(&state.db_pool, claims.sub, &payload.firstname, &payload.lastname).map(Json)
+}
+
+// Sends the API link to the verification handler
+pub async fn update_user_email(Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserRequest>) {
+    return
+}
+
+// Actually updates the email
+pub async fn verify_update_user_email() {
+    return
 }

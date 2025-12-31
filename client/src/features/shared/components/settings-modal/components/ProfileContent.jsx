@@ -47,7 +47,16 @@ const ProfileContent = () => {
         }
 
         if (inputEmail != user.email) {
-            // TODOO: call different API function
+            try {
+                const res = await axios.patch(
+                    `${API_BASE_URL}/user/updatemail`,
+                    { email: inputEmail },
+                    { withCredentials: true }
+                );
+                setUser(res.data);
+            } catch (err) {
+                console.error("Failed to update user email:", err);
+            }
         }
 
         // Exit edit mode

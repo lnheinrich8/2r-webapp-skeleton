@@ -71,11 +71,10 @@ pub fn logout() -> AuthResult<Response> {
     Ok(response)
 }
 
-pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<()> {
+pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
     if user_repo::get_by_email(&mut conn, email).is_ok() {
-        // check if user already exists
-        return Err(AuthError::Conflict);
+        return Err(AuthError::Conflict); // check if user already exists
     }
 
     let hashed_password = hash(password, DEFAULT_COST).map_err(|_| AuthError::Hash)?; // hash with bcrypt
@@ -97,7 +96,10 @@ pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, la
 
     emailer::registration_verification(email, &token).await.map_err(|_| AuthError::Email)?;
 
-    Ok(())
+    Ok(Json(AuthMessageResponse {
+        message: "Verification email sent. Please check your inbox.".to_string(),
+    })
+    .into_response())
 }
 
 pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserResponse> {

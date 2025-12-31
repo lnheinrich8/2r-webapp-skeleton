@@ -35,12 +35,8 @@ pub async fn logout() -> Result<impl axum::response::IntoResponse, AuthError> {
 }
 
 // Register user
-pub async fn register(State(state): State<AppState>, Json(payload): Json<RegisterRequest>) -> Result<Json<AuthMessageResponse>, AuthError> {
-    auth_service::register(&state.db_pool, &state.jwt_email_secret, &payload.firstname, &payload.lastname, &payload.email, &payload.password).await?;
-
-    Ok(Json(AuthMessageResponse { // TODO: move this to service
-        message: "Verification email sent. Please check your inbox.".to_string(),
-    }))
+pub async fn register(State(state): State<AppState>, Json(payload): Json<RegisterRequest>) -> Result<impl axum::response::IntoResponse, AuthError> {
+    auth_service::register(&state.db_pool, &state.jwt_email_secret, &payload.firstname, &payload.lastname, &payload.email, &payload.password).await
 }
 
 // Handler sent to email for registration verification
