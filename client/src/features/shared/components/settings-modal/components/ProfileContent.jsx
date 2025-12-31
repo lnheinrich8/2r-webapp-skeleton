@@ -35,12 +35,12 @@ const ProfileContent = () => {
         // If either first name or last name is different make API update request
         if (inputFirst != user.firstname || inputLast != user.lastname) {
             try {
-                await axios.patch(
+                const res = await axios.patch(
                     `${API_BASE_URL}/user/update`,
                     { firstname: inputFirst, lastname: inputLast },
                     { withCredentials: true }
                 );
-                // TODOO use setUser with returned user info (change api function return type)
+                setUser(res.data);
             } catch (err) {
                 console.error("Failed to update user info:", err);
             }

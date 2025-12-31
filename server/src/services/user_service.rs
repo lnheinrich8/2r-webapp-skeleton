@@ -1,10 +1,9 @@
-use axum::Json;
 use diesel::result::Error;
 
 use crate::core::exceptions::user_exceptions::{UserError, UserResult};
 use crate::db::connection::PgPool;
 use crate::db::repositories::user_repo;
-use crate::schemas::user_schema::{UserMessageResponse, UserResponse};
+use crate::schemas::user_schema::UserResponse;
 use crate::utils::mapper;
 
 pub fn get_by_id(pool: &PgPool, id: i64) -> UserResult<UserResponse> {
@@ -27,14 +26,12 @@ pub fn get_by_email(pool: &PgPool, email: &str) -> UserResult<UserResponse> {
     Ok(mapper::map_user(user))
 }
 
-pub fn update(pool: &PgPool, id: i64, firstname: &str, lastname: &str) -> UserResult<Json<UserMessageResponse>> {
+pub fn update(pool: &PgPool, id: i64, firstname: &str, lastname: &str) -> UserResult<UserResponse> {
     let mut conn = pool.get().map_err(|_| UserError::Database)?;
-    user_repo::update_name(&mut conn, id, firstname, lastname).map_err(|err| match err {
+    let user = user_repo::update_name(&mut conn, id, firstname, lastname).map_err(|err| match err {
         Error::NotFound => UserError::NotFound,
         _ => UserError::Database,
     })?;
 
-    Ok(Json(UserMessageResponse {
-        message: "User information updated".to_string(),
-    }))
+    Ok(mapper::map_user(user))
 }

@@ -8,10 +8,11 @@ pub struct UpdateUserRequest {
     pub lastname: String
 }
 
-#[derive(Deserialize)]
-pub struct UpdateUserEmailRequest {
-    pub email: String
-}
+// // Unused currently
+// #[derive(Deserialize)]
+// pub struct UpdateUserEmailRequest {
+//     pub email: String
+// }
 
 // RESPONSE SCHEMAS
 
@@ -23,7 +24,8 @@ pub struct UserResponse {
     pub lastname: String,
 }
 
-#[derive(Serialize)]
-pub struct UserMessageResponse {
-    pub message: String
-}
+// // Unused currently
+// #[derive(Serialize)]
+// pub struct UserMessageResponse {
+//     pub message: String
+// }
