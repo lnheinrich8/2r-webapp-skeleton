@@ -1,19 +1,53 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import axios from 'axios';
+
 import { useAuth } from '../../../../auth/AuthContext';
+import API_BASE_URL from '../../../utils/api';
 
 // Styling
 import './smcontent.css'
 
 const ProfileContent = () => {
-    const { user, loading } = useAuth();
+    const { user, setUser, loading } = useAuth();
 
+    // Information updating stuff
     const [isEditing, setIsEditing] = useState(false);
+    const firstRef = useRef(null);
+    const lastRef = useRef(null);
+    const emailRef = useRef(null);
 
-
-    const handleEditToggle = () => {
-        if (!isEditing) {
+    const handleEditToggle = async () => {
+        if (!isEditing) { // if starting to edit
             setIsEditing(true);
             return;
+        } // else: saving
+
+        const inputFirst = firstRef.current.value;
+        const inputLast = lastRef.current.value;
+        const inputEmail = emailRef.current.value;
+
+        // If everything is the same as before do nothing
+        if (inputFirst == user.firstname && inputLast == user.lastname && inputEmail == user.email) {
+            setIsEditing(false);
+            return;
+        }
+
+        // If either first name or last name is different make API update request
+        if (inputFirst != user.firstname || inputLast != user.lastname) {
+            try {
+                await axios.patch(
+                    `${API_BASE_URL}/user/update`,
+                    { firstname: inputFirst, lastname: inputLast },
+                    { withCredentials: true }
+                );
+                // TODOO use setUser with returned user info (change api function return type)
+            } catch (err) {
+                console.error("Failed to update user info:", err);
+            }
+        }
+
+        if (inputEmail != user.email) {
+            // TODOO: call different API function
         }
 
         // Exit edit mode
@@ -49,7 +83,8 @@ const ProfileContent = () => {
                         <input
                             className="sm-content-edit-input"
                             type="firstname"
-                            value={user.firstname}
+                            defaultValue={user.firstname}
+                            ref={firstRef}
                         />
                     ) : user.firstname}
                 </span>
@@ -63,7 +98,8 @@ const ProfileContent = () => {
                         <input
                             className="sm-content-edit-input"
                             type="lastname"
-                            value={user.lastname}
+                            defaultValue={user.lastname}
+                            ref={lastRef}
                         />
                     ) : user.lastname}
                 </span>
@@ -77,7 +113,8 @@ const ProfileContent = () => {
                         <input
                             className="sm-content-edit-input"
                             type="email"
-                            value={user.email}
+                            defaultValue={user.email}
+                            ref={emailRef}
                         />
                     ) : user.email}
                 </span>

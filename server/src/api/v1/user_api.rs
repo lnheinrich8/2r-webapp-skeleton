@@ -1,6 +1,6 @@
 use axum::{
     extract::{Path, State, Extension},
-    routing::{get, post},
+    routing::{get, patch},
     Json, 
     Router
 };
@@ -15,7 +15,7 @@ pub fn protected_router() -> Router<AppState> {
     Router::<AppState>::new()
         .route("/getbyid/:id", get(get_user_by_id))
         .route("/getbyemail/:email", get(get_user_by_email))
-        .route("/update", post(update_user))
+        .route("/update", patch(update_user))
 }
 
 // Get user from db with id
