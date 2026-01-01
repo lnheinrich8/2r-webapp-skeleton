@@ -23,8 +23,7 @@ pub struct UserResponse {
     pub lastname: String,
 }
 
-// // Unused currently
-// #[derive(Serialize)]
-// pub struct UserMessageResponse {
-//     pub message: String
-// }
+#[derive(Serialize)]
+pub struct UserMessageResponse {
+    pub message: String
+}

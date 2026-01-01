@@ -34,7 +34,8 @@ pub async fn logout() -> Result<impl axum::response::IntoResponse, AuthError> {
     auth_service::logout()
 }
 
-// Register user
+// TODO: change register return type
+// Register user 
 pub async fn register(State(state): State<AppState>, Json(payload): Json<RegisterRequest>) -> Result<impl axum::response::IntoResponse, AuthError> {
     auth_service::register(&state.db_pool, &state.jwt_email_secret, &payload.firstname, &payload.lastname, &payload.email, &payload.password).await
 }
@@ -48,3 +49,8 @@ pub async fn verify_register(State(state): State<AppState>, Query(params): Query
 pub async fn get_current(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Result<Json<UserResponse>, UserError> {
     user_service::get_by_id(&state.db_pool, claims.sub).map(Json)
 }
+
+// Actually updates the email from user update email handler
+// pub async fn verify_update_user_email() -> Result<Json<UserMessageResponse>, AuthError> {
+//     return
+// }

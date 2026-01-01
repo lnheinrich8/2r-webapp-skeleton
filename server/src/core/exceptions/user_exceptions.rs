@@ -9,6 +9,9 @@ pub type UserResult<T> = Result<T, UserError>;
 pub enum UserError {
     NotFound,
     Database,
+    Conflict,
+    Token,
+    Email,
 }
 
 #[derive(Serialize)]
@@ -21,6 +24,9 @@ impl IntoResponse for UserError {
         let (status, message) = match self {
             UserError::NotFound => (StatusCode::NOT_FOUND, "User not found"),
             UserError::Database => (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error"),
+            UserError::Conflict => (StatusCode::CONFLICT, "User already exists"),
+            UserError::Token => (StatusCode::INTERNAL_SERVER_ERROR, "Token processing failed"),
+            UserError::Email => (StatusCode::INTERNAL_SERVER_ERROR, "Email delivery failed"),
         };
         let body = Json(UserErrorResponse {
             error: message.to_string(),

@@ -7,7 +7,7 @@ use axum::{
 use crate::AppState;
 use crate::core::auth::Claims;
 use crate::core::exceptions::user_exceptions::UserError;
-use crate::schemas::user_schema::{UpdateUserRequest, UserResponse};
+use crate::schemas::user_schema::{UpdateUserRequest, UpdateUserEmailRequest, UserResponse, UserMessageResponse};
 use crate::services::user_service;
 
 pub fn protected_router() -> Router<AppState> {
@@ -16,7 +16,6 @@ pub fn protected_router() -> Router<AppState> {
         .route("/getbyemail/:email", get(get_user_by_email))
         .route("/update", patch(update_user))
         .route("/updatemail", post(update_user_email))
-        .route("/verifyemail", patch(verify_update_user_email))
 }
 
 // Get user from db with id
@@ -35,11 +34,6 @@ pub async fn update_user(State(state): State<AppState>, Extension(claims): Exten
 }
 
 // Sends the API link to the verification handler
-pub async fn update_user_email(Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserRequest>) {
-    return
-}
-
-// Actually updates the email
-pub async fn verify_update_user_email() {
-    return
+pub async fn update_user_email(State(state): State<AppState>, Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserEmailRequest>) -> Result<Json<UserMessageResponse>, UserError> {
+    user_service::update_email(&state.db_pool, &state.jwt_email_secret, claims.sub, &payload.email).await.map(Json)
 }

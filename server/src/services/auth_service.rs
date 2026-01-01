@@ -73,8 +73,11 @@ pub fn logout() -> AuthResult<Response> {
 
 pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
-    if user_repo::get_by_email(&mut conn, email).is_ok() {
-        return Err(AuthError::Conflict); // check if user already exists
+    
+    match user_repo::get_by_email(&mut conn, email) {
+        Ok(_) => return Err(AuthError::Conflict), // user already exists with this email so throw error
+        Err(Error::NotFound) => {} // safe to continue with registration
+        Err(_) => return Err(AuthError::Database),
     }
 
     let hashed_password = hash(password, DEFAULT_COST).map_err(|_| AuthError::Hash)?; // hash with bcrypt
