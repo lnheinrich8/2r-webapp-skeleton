@@ -19,9 +19,10 @@ pub struct RegisterValidateClaims {
 
 #[derive(Serialize, Deserialize)]
 pub struct EmailValidateClaims {
+    pub id: i64,
     pub firstname: String,
     pub lastname: String,
-    pub email: String,
+    pub newemail: String,
     pub exp: usize
 }
 

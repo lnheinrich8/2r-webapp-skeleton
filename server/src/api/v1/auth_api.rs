@@ -8,7 +8,7 @@ use crate::AppState;
 use crate::core::auth::Claims;
 use crate::core::exceptions::{auth_exceptions::AuthError, user_exceptions::UserError};
 use crate::schemas::auth_schema::{LoginRequest, RegisterRequest, VerificationQuery, AuthMessageResponse};
-use crate::schemas::user_schema::UserResponse;
+use crate::schemas::user_schema::{UserResponse, UserMessageResponse};
 use crate::services::{auth_service, user_service};
 
 pub fn public_router() -> Router<AppState> {
@@ -16,6 +16,7 @@ pub fn public_router() -> Router<AppState> {
         .route("/login", post(login))
         .route("/register", post(register))
         .route("/verifyregister", get(verify_register))
+        .route("/verifyemail", get(verify_update_user_email))
 }
 
 pub fn protected_router() -> Router<AppState> {
@@ -45,12 +46,12 @@ pub async fn verify_register(State(state): State<AppState>, Query(params): Query
     auth_service::verify_register(&state.db_pool, &state.jwt_email_secret, &params.token).map(Json)
 }
 
+// Actually updates the email from user update email handler
+pub async fn verify_update_user_email(State(state): State<AppState>, Query(params): Query<VerificationQuery>) -> Result<Json<UserMessageResponse>, AuthError> {
+    auth_service::verify_email(&state.db_pool, &state.jwt_email_secret, &params.token).map(Json)
+}
+
 // Get current user (for client authorization)
 pub async fn get_current(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Result<Json<UserResponse>, UserError> {
     user_service::get_by_id(&state.db_pool, claims.sub).map(Json)
 }
-
-// Actually updates the email from user update email handler
-// pub async fn verify_update_user_email() -> Result<Json<UserMessageResponse>, AuthError> {
-//     return
-// }

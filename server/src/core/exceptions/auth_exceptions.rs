@@ -8,6 +8,7 @@ pub type AuthResult<T> = Result<T, AuthError>;
 #[derive(Debug)]
 pub enum AuthError {
     Unauthorized,
+    NotFound,
     Conflict,
     Database,
     Pool,
@@ -25,6 +26,7 @@ impl IntoResponse for AuthError {
     fn into_response(self) -> Response {
         let (status, message) = match self {
             AuthError::Unauthorized => (StatusCode::UNAUTHORIZED, "Invalid credentials"),
+            AuthError::NotFound => (StatusCode::NOT_FOUND, "User not found"),
             AuthError::Conflict => (StatusCode::CONFLICT, "User already exists"),
             AuthError::Hash => (StatusCode::INTERNAL_SERVER_ERROR, "Password processing failed"),
             AuthError::Token => (StatusCode::INTERNAL_SERVER_ERROR, "Token processing failed"),

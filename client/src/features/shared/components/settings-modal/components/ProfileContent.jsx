@@ -53,7 +53,9 @@ const ProfileContent = () => {
                     { email: inputEmail },
                     { withCredentials: true }
                 );
-                setUser(res.data);
+
+                // TODO: show visual telling user that the email was sent
+                console.log(res.data);
             } catch (err) {
                 console.error("Failed to update user email:", err);
             }

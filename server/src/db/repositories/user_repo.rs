@@ -25,3 +25,11 @@ pub fn update_name(conn: &mut PgConnection, user_id: i64, firstname: &str, lastn
         ))
         .get_result(conn)
 }
+
+pub fn update_email(conn: &mut PgConnection, user_id: i64, user_email: &str) -> QueryResult<User> {
+    diesel::update(users.find(user_id))
+        .set(
+            email.eq(user_email)
+        )
+        .get_result(conn)
+}   

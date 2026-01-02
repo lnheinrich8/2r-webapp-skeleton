@@ -1,7 +1,7 @@
 use axum::{
     Json, Router,
     extract::{Extension, Path, State},
-    routing::{get, post, patch},
+    routing::{get, patch},
 };
 
 use crate::AppState;
@@ -15,7 +15,7 @@ pub fn protected_router() -> Router<AppState> {
         .route("/getbyid/:id", get(get_user_by_id))
         .route("/getbyemail/:email", get(get_user_by_email))
         .route("/update", patch(update_user))
-        .route("/updatemail", post(update_user_email))
+        .route("/updatemail", patch(update_user_email))
 }
 
 // Get user from db with id

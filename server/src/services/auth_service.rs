@@ -6,7 +6,7 @@ use axum::{
 use bcrypt::{DEFAULT_COST, hash, verify};
 use chrono::{Duration, Utc};
 use diesel::result::Error;
-use jsonwebtoken::{EncodingKey, Header, encode};
+use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 
 use crate::core::auth::Claims;
 use crate::core::exceptions::auth_exceptions::{AuthError, AuthResult};
@@ -14,7 +14,7 @@ use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
 use crate::schemas::auth_schema::{AuthMessageResponse, LoginResponse};
-use crate::schemas::user_schema::UserResponse;
+use crate::schemas::user_schema::{UserResponse, UserMessageResponse};
 use crate::utils::{emailer, mapper};
 
 pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> AuthResult<Response> {
@@ -73,10 +73,10 @@ pub fn logout() -> AuthResult<Response> {
 
 pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
-    
+
     match user_repo::get_by_email(&mut conn, email) {
         Ok(_) => return Err(AuthError::Conflict), // user already exists with this email so throw error
-        Err(Error::NotFound) => {} // safe to continue with registration
+        Err(Error::NotFound) => {}                // safe to continue with registration
         Err(_) => return Err(AuthError::Database),
     }
 
@@ -106,8 +106,6 @@ pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, la
 }
 
 pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserResponse> {
-    use jsonwebtoken::{DecodingKey, Validation, decode};
-
     let token_data = decode::<emailer::RegisterValidateClaims>(token, &DecodingKey::from_secret(jwt_email_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Token)?;
 
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
@@ -127,5 +125,20 @@ pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> Au
         _ => AuthError::Database,
     })?;
 
-    Ok(mapper::map_user(user))
+    Ok(mapper::map_user(user)) // TODOO change to simple html page
+}
+
+pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserMessageResponse> {
+    let token_data = decode::<emailer::EmailValidateClaims>(token, &DecodingKey::from_secret(jwt_email_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Token)?;
+
+    let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
+
+    user_repo::update_email(&mut conn, token_data.claims.id, &token_data.claims.newemail).map_err(|err| match err {
+        Error::NotFound => AuthError::NotFound,
+        _ => AuthError::Database,
+    })?;
+
+    Ok(UserMessageResponse {
+        message: format!("Your email has been updated") // TODOO change to simple html page
+    })
 }

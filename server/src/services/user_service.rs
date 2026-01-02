@@ -62,9 +62,10 @@ pub async fn update_email(pool: &PgPool, jwt_email_secret: &str, id: i64, email:
         .timestamp() as usize;
 
     let claims = emailer::EmailValidateClaims {
+        id: id,
         firstname: user.firstname.to_string(),
         lastname: user.lastname.to_string(),
-        email: user.email.to_string(),
+        newemail: email.to_string(),
         exp: expiration,
     };
 
