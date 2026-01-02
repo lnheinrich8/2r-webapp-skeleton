@@ -14,8 +14,8 @@ use crate::db::connection::PgPool;
 use crate::db::models::user_model::NewUser;
 use crate::db::repositories::user_repo;
 use crate::schemas::auth_schema::{AuthMessageResponse, LoginResponse};
-use crate::schemas::user_schema::{UserResponse, UserMessageResponse};
 use crate::utils::{emailer, mapper};
+use crate::utils::email_templates::{REGISTER_VERIFICATION_HTML, EMAIL_UPDATE_VERIFICATION_HTML};
 
 pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?; // try to make connection to the r2d2 pool and propagate upwards if error
@@ -105,7 +105,7 @@ pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, la
     .into_response())
 }
 
-pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserResponse> {
+pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<&'static str> {
     let token_data = decode::<emailer::RegisterValidateClaims>(token, &DecodingKey::from_secret(jwt_email_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Token)?;
 
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
@@ -120,15 +120,15 @@ pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> Au
         lastname: &token_data.claims.lastname,
     };
 
-    let user = user_repo::create(&mut conn, &new_user).map_err(|err| match err {
+    user_repo::create(&mut conn, &new_user).map_err(|err| match err {
         Error::DatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _) => AuthError::Conflict,
         _ => AuthError::Database,
     })?;
 
-    Ok(mapper::map_user(user)) // TODOO change to simple html page
+    Ok(REGISTER_VERIFICATION_HTML)
 }
 
-pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<UserMessageResponse> {
+pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<&'static str> {
     let token_data = decode::<emailer::EmailValidateClaims>(token, &DecodingKey::from_secret(jwt_email_secret.as_bytes()), &Validation::default()).map_err(|_| AuthError::Token)?;
 
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
@@ -138,7 +138,5 @@ pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthR
         _ => AuthError::Database,
     })?;
 
-    Ok(UserMessageResponse {
-        message: format!("Your email has been updated") // TODOO change to simple html page
-    })
+    Ok(EMAIL_UPDATE_VERIFICATION_HTML)
 }
