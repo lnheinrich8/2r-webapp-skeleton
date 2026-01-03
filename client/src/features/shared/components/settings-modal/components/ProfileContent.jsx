@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { useAuth } from '../../../../auth/AuthContext';
@@ -9,6 +10,7 @@ import './smcontent.css'
 
 const ProfileContent = () => {
     const { user, setUser, loading } = useAuth();
+    const navigate = useNavigate(); // for changing password or deleting account
 
     // Information updating stuff
     const [isEditing, setIsEditing] = useState(false);
@@ -65,7 +67,19 @@ const ProfileContent = () => {
         setIsEditing(false);
     }
 
-
+    // TODO: add confirm delete
+    const handleDelete = async () => {
+        try {
+            await axios.delete(
+                `${API_BASE_URL}/user/delete`,
+                { withCredentials: true }
+            )
+            setUser(null);
+            navigate('/');    
+        } catch (err) {
+            console.error('Deleting user failed:', err);
+        }
+    }
 
 
     if (loading || !user) return null;
@@ -142,7 +156,7 @@ const ProfileContent = () => {
 
             <div className="sm-content-row">
                 <span className="sm-content-label">Delete account</span>
-                <button className="sm-content-button-red">Delete</button>
+                <button className="sm-content-button-red" onClick={handleDelete}>Delete</button>
             </div>
 
         </div>

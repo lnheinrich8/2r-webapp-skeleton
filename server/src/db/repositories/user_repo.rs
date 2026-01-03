@@ -33,3 +33,7 @@ pub fn update_email(conn: &mut PgConnection, user_id: i64, user_email: &str) -> 
         )
         .get_result(conn)
 }   
+
+pub fn delete(conn: &mut PgConnection, user_id: i64) -> QueryResult<usize> {
+    diesel::delete(users.find(user_id)).execute(conn)
+}

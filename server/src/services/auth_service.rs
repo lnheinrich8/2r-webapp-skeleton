@@ -19,6 +19,7 @@ use crate::utils::email_templates::{REGISTER_VERIFICATION_HTML, EMAIL_UPDATE_VER
 
 pub fn login(pool: &PgPool, jwt_secret: &str, email: &str, password: &str) -> AuthResult<Response> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?; // try to make connection to the r2d2 pool and propagate upwards if error
+    
     let user = user_repo::get_by_email(&mut conn, email).map_err(|err| match err {
         Error::NotFound => AuthError::Unauthorized,
         _ => AuthError::Database,
@@ -71,7 +72,7 @@ pub fn logout() -> AuthResult<Response> {
     Ok(response)
 }
 
-pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<Response> {
+pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, lastname: &str, email: &str, password: &str) -> AuthResult<AuthMessageResponse> {
     let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
 
     match user_repo::get_by_email(&mut conn, email) {
@@ -99,10 +100,9 @@ pub async fn register(pool: &PgPool, jwt_email_secret: &str, firstname: &str, la
 
     emailer::registration_verification(email, &token).await.map_err(|_| AuthError::Email)?;
 
-    Ok(Json(AuthMessageResponse {
-        message: "Verification email sent. Please check your inbox.".to_string(),
+    Ok(AuthMessageResponse {
+        message: format!("Registration verification email link sent to {}. Please check your inbox.", email),
     })
-    .into_response())
 }
 
 pub fn verify_register(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthResult<&'static str> {

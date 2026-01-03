@@ -25,8 +25,8 @@ const Sidebar = ({ collapsed, setSidebarCollapsed, onOpenSettings }) => {
             await axios.get(`${API_BASE_URL}/auth/logout`, { withCredentials: true });
             setUser(null);
             navigate('/');
-        } catch (error) {
-            console.error('Logout failed:', error);
+        } catch (err) {
+            console.error('Logout failed:', err);
         }
     }
 

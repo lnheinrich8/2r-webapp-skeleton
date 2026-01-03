@@ -1,3 +1,8 @@
+use axum::{
+    Json,
+    http::{HeaderValue, header},
+    response::{IntoResponse, Response},
+};
 use diesel::result::Error;
 use chrono::{Duration, Utc};
 use jsonwebtoken::{EncodingKey, Header, encode};
@@ -75,4 +80,28 @@ pub async fn update_email(pool: &PgPool, jwt_email_secret: &str, id: i64, email:
     Ok(UserMessageResponse {
         message: format!("Verification email link sent to {}", email),
     })
+}
+
+pub fn delete(pool: &PgPool, id: i64) -> UserResult<Response> {
+    let mut conn = pool.get().map_err(|_| UserError::Database)?;
+
+    user_repo::delete(&mut conn, id).map_err(|err| match err {
+        Error::NotFound => UserError::NotFound,
+        _ => UserError::Database
+    })?;
+
+    let mut response = Json(UserMessageResponse {
+        message: "Logged out successfully".to_string(),
+    })
+    .into_response();
+
+    response
+        .headers_mut()
+        .insert(header::SET_COOKIE, HeaderValue::from_static("token=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/"));
+
+    Ok(response)
+
+    // Ok(UserMessageResponse {
+    //     message: "User deleted successfully".to_string(),
+    // })
 }

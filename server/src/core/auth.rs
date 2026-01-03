@@ -13,7 +13,7 @@ use crate::core::exceptions::auth_exceptions::AuthError;
 use crate::db::repositories::user_repo;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Claims {
+pub struct Claims { // payload inside the signed user session token
     pub sub: i64,
     pub email: String,
     pub exp: usize,

@@ -1,7 +1,7 @@
 use axum::{
     Json, Router,
     extract::{Extension, Path, State},
-    routing::{get, patch},
+    routing::{get, patch, delete},
 };
 
 use crate::AppState;
@@ -16,6 +16,7 @@ pub fn protected_router() -> Router<AppState> {
         .route("/getbyemail/:email", get(get_user_by_email))
         .route("/update", patch(update_user))
         .route("/updatemail", patch(update_user_email))
+        .route("/delete", delete(delete_user))
 }
 
 // Get user from db with id
@@ -36,4 +37,9 @@ pub async fn update_user(State(state): State<AppState>, Extension(claims): Exten
 // Sends the API link to the verification handler
 pub async fn update_user_email(State(state): State<AppState>, Extension(claims): Extension<Claims>, Json(payload): Json<UpdateUserEmailRequest>) -> Result<Json<UserMessageResponse>, UserError> {
     user_service::update_email(&state.db_pool, &state.jwt_email_secret, claims.sub, &payload.email).await.map(Json)
+}
+
+// Delete the current user
+pub async fn delete_user(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Result<impl axum::response::IntoResponse, UserError> {
+    user_service::delete(&state.db_pool, claims.sub)
 }
