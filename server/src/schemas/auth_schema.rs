@@ -19,6 +19,12 @@ pub struct RegisterRequest {
 }
 
 #[derive(Deserialize)]
+pub struct ChangePasswordRequest {
+    pub current_pass: String,
+    pub new_pass: String,
+}
+
+#[derive(Deserialize)]
 pub struct VerificationQuery {
     pub token: String,
 }

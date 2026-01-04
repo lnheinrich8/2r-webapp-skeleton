@@ -140,3 +140,12 @@ pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthR
 
     Ok(EMAIL_UPDATE_VERIFICATION_HTML)
 }
+
+pub fn change_password(pool: &PgPool, id: i64, current_pass: &str, new_pass: &str) -> AuthResult<AuthMessageResponse> {
+
+    // TODO: implement
+
+    Ok(AuthMessageResponse {
+        message: "Password has been successfully changed.".to_string()
+    })
+}
