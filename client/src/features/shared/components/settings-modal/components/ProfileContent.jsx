@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -14,11 +14,27 @@ const ProfileContent = () => {
 
     // Information updating stuff
     const [isEditing, setIsEditing] = useState(false);
+    const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
     const firstRef = useRef(null);
     const lastRef = useRef(null);
     const emailRef = useRef(null);
+    const deleteButtonRef = useRef(null);
+
+    useEffect(() => {
+        if (!isConfirmingDelete) return;
+
+        const handleDocumentMouseDown = (event) => {
+            if (deleteButtonRef.current && !deleteButtonRef.current.contains(event.target)) {
+                setIsConfirmingDelete(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleDocumentMouseDown);
+        return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
+    }, [isConfirmingDelete]);
 
     const handleEditToggle = async () => {
+        setIsConfirmingDelete(false);
         if (!isEditing) { // if starting to edit
             setIsEditing(true);
             return;
@@ -67,8 +83,13 @@ const ProfileContent = () => {
         setIsEditing(false);
     }
 
-    // TODO: add confirm delete
     const handleDelete = async () => {
+        setIsEditing(false);
+        if (!isConfirmingDelete) {
+            setIsConfirmingDelete(true);
+            return;
+        }
+
         try {
             await axios.delete(
                 `${API_BASE_URL}/user/delete`,
@@ -78,6 +99,8 @@ const ProfileContent = () => {
             navigate('/');    
         } catch (err) {
             console.error('Deleting user failed:', err);
+        } finally {
+            setIsConfirmingDelete(false);
         }
     }
 
@@ -156,7 +179,13 @@ const ProfileContent = () => {
 
             <div className="sm-content-row">
                 <span className="sm-content-label">Delete account</span>
-                <button className="sm-content-button-red" onClick={handleDelete}>Delete</button>
+                <button
+                    ref={deleteButtonRef}
+                    className="sm-content-button-red"
+                    onClick={handleDelete}
+                >
+                    {isConfirmingDelete ? 'Confirm' : 'Delete'}
+                </button>
             </div>
 
         </div>
