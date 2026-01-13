@@ -15,11 +15,57 @@ const ProfileContent = () => {
     // Information updating stuff
     const [isEditing, setIsEditing] = useState(false);
     const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [currentPass, setCurrentPass] = useState('');
+    const [newPass, setNewPass] = useState('');
     const firstRef = useRef(null);
     const lastRef = useRef(null);
     const emailRef = useRef(null);
     const deleteButtonRef = useRef(null);
+    const editButtonRef = useRef(null);
+    const currentPassRef = useRef(null);
+    const newPassRef = useRef(null);
+    const changePasswordButtonRef = useRef(null);
 
+
+    // Profile editing event listener (to hide inputs)
+    useEffect(() => {
+        if (!isEditing) return;
+
+        const handleDocumentMouseDown = (event) => {
+            const clickedInput =
+                firstRef.current?.contains(event.target) ||
+                lastRef.current?.contains(event.target) ||
+                emailRef.current?.contains(event.target);
+            if (clickedInput || editButtonRef.current?.contains(event.target)) return;
+
+            setIsEditing(false);
+        };
+
+        document.addEventListener('mousedown', handleDocumentMouseDown);
+        return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
+    }, [isEditing]);
+
+    // Change password event listener (to hide inputs)
+    useEffect(() => {
+        if (!isChangingPassword) return;
+
+        const handleDocumentMouseDown = (event) => {
+            const clickedInput =
+                currentPassRef.current?.contains(event.target) ||
+                newPassRef.current?.contains(event.target);
+            if (clickedInput || changePasswordButtonRef.current?.contains(event.target)) return;
+
+            setCurrentPass('');
+            setNewPass('');
+            setIsChangingPassword(false);
+        };
+
+        document.addEventListener('mousedown', handleDocumentMouseDown);
+        return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
+    }, [isChangingPassword]);
+
+    // Delete account event listener (to cancel)
     useEffect(() => {
         if (!isConfirmingDelete) return;
 
@@ -72,8 +118,7 @@ const ProfileContent = () => {
                     { withCredentials: true }
                 );
 
-                // TODO: show visual telling user that the email was sent
-                console.log(res.data);
+                console.log(res.data); // TODO: show this notification in the UI
             } catch (err) {
                 console.error("Failed to update user email:", err);
             }
@@ -81,6 +126,38 @@ const ProfileContent = () => {
 
         // Exit edit mode
         setIsEditing(false);
+    }
+
+    const handleChangePassword = async () => {
+        if (!isChangingPassword) {
+            setIsChangingPassword(true);
+            return;
+        }
+
+        if (!currentPass || !newPass) {
+            console.error("Current password and new password cannot be empty"); // TODO: show this error in the UI
+            return;
+        }
+
+        if (currentPass == newPass) {
+            console.error("New password must be different from the current password"); // TODO: show this an error in the UI
+            return;
+        }
+
+        try {
+            await axios.patch(
+                `${API_BASE_URL}/auth/newpass`,
+                { current_pass: currentPass, new_pass: newPass },
+                { withCredentials: true }
+            )
+            setCurrentPass('');
+            setNewPass('');
+            setIsChangingPassword(false);
+            // TODO: show successful password change in the UI
+        } catch (err) {
+            console.error("Could not change password"); // TODO: show this an error in the UI
+            console.error(err); // Keep this in the console
+        }
     }
 
     const handleDelete = async () => {
@@ -96,7 +173,7 @@ const ProfileContent = () => {
                 { withCredentials: true }
             )
             setUser(null);
-            navigate('/');    
+            navigate('/');
         } catch (err) {
             console.error('Deleting user failed:', err);
         } finally {
@@ -114,7 +191,11 @@ const ProfileContent = () => {
 
             <div className="sm-content-row">
                 <span className="sm-content-label">Edit profile</span>
-                <button className="sm-content-button" onClick={handleEditToggle}>
+                <button
+                    className="sm-content-button"
+                    onClick={handleEditToggle}
+                    ref={editButtonRef}
+                >
                     {isEditing ? 'Save' : 'Edit'}
                 </button>
             </div>
@@ -172,9 +253,38 @@ const ProfileContent = () => {
 
             <p className="sm-content-header">Security</p>
 
-            <div className="sm-content-row">
-                <span className="sm-content-label">Change password</span>
-                <button className="sm-content-button-red">Change</button>
+            <div>
+                <div className="sm-content-row">
+                    <span className="sm-content-label">Change password</span>
+                    <button
+                        className="sm-content-button-red"
+                        onClick={handleChangePassword}
+                        ref={changePasswordButtonRef}
+                    >
+                        {isChangingPassword ? 'Confirm' : 'Change'}
+                    </button>
+                </div>
+
+                <div className={`sm-content-password-fields ${isChangingPassword ? 'is-open' : ''}`}>
+                    <div className="sm-content-password-inputs">
+                        <input
+                            className="sm-content-edit-input"
+                            type="password"
+                            placeholder="Current password"
+                            value={currentPass}
+                            onChange={(event) => setCurrentPass(event.target.value)}
+                            ref={currentPassRef}
+                        />
+                        <input
+                            className="sm-content-edit-input"
+                            type="password"
+                            placeholder="New password"
+                            value={newPass}
+                            onChange={(event) => setNewPass(event.target.value)}
+                            ref={newPassRef}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="sm-content-row">

@@ -4,6 +4,7 @@ use diesel::result::QueryResult;
 
 use crate::db::models::user_model::{NewUser, User};
 use crate::db::schema::users::dsl::{email, firstname as firstname_column, lastname as lastname_column, users};
+use crate::db::schema::users::password;
 
 pub fn get_by_id(conn: &mut PgConnection, user_id: i64) -> QueryResult<User> {
     users.find(user_id).get_result(conn)
@@ -32,7 +33,15 @@ pub fn update_email(conn: &mut PgConnection, user_id: i64, user_email: &str) -> 
             email.eq(user_email)
         )
         .get_result(conn)
-}   
+}
+
+pub fn update_password(conn: &mut PgConnection, user_id: i64, user_newpass: &str) -> QueryResult<User> {
+    diesel::update(users.find(user_id))
+        .set(
+            password.eq(user_newpass)
+        )
+        .get_result(conn)
+}
 
 pub fn delete(conn: &mut PgConnection, user_id: i64) -> QueryResult<usize> {
     diesel::delete(users.find(user_id)).execute(conn)

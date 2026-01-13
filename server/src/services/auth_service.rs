@@ -142,8 +142,22 @@ pub fn verify_email(pool: &PgPool, jwt_email_secret: &str, token: &str) -> AuthR
 }
 
 pub fn change_password(pool: &PgPool, id: i64, current_pass: &str, new_pass: &str) -> AuthResult<AuthMessageResponse> {
+    let mut conn = pool.get().map_err(|_| AuthError::Pool)?;
 
-    // TODO: implement
+    let user = user_repo::get_by_id(&mut conn, id).map_err(|err| match err {
+        Error::NotFound => AuthError::Unauthorized,
+        _ => AuthError::Database,
+    })?;
+
+    // Check if current password is correct first
+    let is_valid = verify(current_pass, &user.password).map_err(|_| AuthError::Hash)?;
+    if !is_valid {
+        return Err(AuthError::Unauthorized);
+    }
+
+    let hashed_newpass = hash(new_pass, DEFAULT_COST).map_err(|_| AuthError::Hash)?; // hash with bcrypt
+
+    user_repo::update_password(&mut conn, id, &hashed_newpass).map_err(|_| AuthError::Database)?;
 
     Ok(AuthMessageResponse {
         message: "Password has been successfully changed.".to_string()
