@@ -16,3 +16,4 @@ rustfmt.toml
 .env
 .vscode/*
 !.vscode/extensions.json
+.codex
